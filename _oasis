@@ -1,0 +1,37 @@
+OASISFormat:  0.4
+OCamlVersion: >= 4.02.3
+Name:         brotli
+Version:      0.1
+Maintainers:  Edgar Aroutiounian
+Homepage:     http://hyegar.com
+Synopsis:     Bindings to google's brotli
+Authors:      Edgar Aroutiounian <edgar.factorial@gmail.com>
+License:      BSD-3-clause
+Plugins:      META (0.4), DevFiles (0.4)
+AlphaFeatures: ocamlbuild_more_args
+
+Description:
+  OCaml Bindings to brotli, Google's new compression algorithm
+
+  Source: https://github.com/google/brotli/
+  RFC: http://www.ietf.org/id/draft-alakuijala-brotli
+
+Executable obrotli
+  Path: src/app
+  BuildTools:ocamlbuild
+  install: true
+  MainIs: main.ml
+  CCOpt: -g -Wall
+  CompiledObject: native
+  BuildDepends: cmdliner, brotli
+
+Library brotli
+  Path: src/lib
+  BuildTools:ocamlbuild
+  install: true
+  # CClib: -lssh
+  CCOpt: -g -Wall 
+  Modules: Brotli
+  # InternalModules: 
+  CompiledObject: best
+  CSources: brotli_stubs.c
