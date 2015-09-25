@@ -21,7 +21,6 @@ Executable obrotli
   BuildTools:ocamlbuild
   install: true
   MainIs: main.ml
-  CCOpt: -g -Wall
   CompiledObject: native
   BuildDepends: cmdliner, brotli
 
@@ -29,8 +28,10 @@ Library brotli
   Path: src/lib
   BuildTools:ocamlbuild
   install: true
-  # CClib: -lssh
-  CCOpt: -g -Wall 
+  CClib: -lbrotli -lstdc++
+  CCOpt: -g -Wall -std=c++98 -x c++
+  NativeOpt:  -cc clang
+  ByteOpt:    -cc clang
   Modules: Brotli
   # InternalModules: 
   CompiledObject: best

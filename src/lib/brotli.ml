@@ -1,6 +1,1 @@
-
-
-
-
-
-let something () = print_endline "123"
+external decompress_buffer : bytes -> bytes = "brotli_ml_decompress_buffer"
