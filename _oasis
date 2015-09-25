@@ -30,8 +30,8 @@ Library brotli
   install: true
   CClib: -lbrotli -lstdc++
   CCOpt: -g -Wall -std=c++98 -x c++
-  NativeOpt:  -cc clang
-  ByteOpt:    -cc clang
+  NativeOpt: -cc clang
+  ByteOpt: -cc clang
   Modules: Brotli
   # InternalModules: 
   CompiledObject: best

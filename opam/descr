@@ -1,0 +1,5 @@
+Bindings to google's brotli
+OCaml Bindings to brotli, Google's new compression algorithm Source:
+https://github.com/google/brotli/ RFC:
+http://www.ietf.org/id/draft-alakuijala-brotli
+
