@@ -26,21 +26,24 @@ extern "C" {
   CAMLprim value brotli_ml_decompress_buffer(value compressed_buffer)
   {
     CAMLparam1(compressed_buffer);
-    BrotliMemInput memin;
-    BrotliOutput out;
+    uint8_t *input;
+    size_t length;
     int ok;
 
-    size_t len = caml_string_length(compressed_buffer);
-    uint8_t *buffer_copy =
-      (unsigned char *)caml_strdup(String_val(compressed_buffer));
+    length = caml_string_length(compressed_buffer);
+    input = (unsigned char *)caml_strdup(String_val(compressed_buffer));
 
-    BrotliInput in = BrotliInitMemInput(buffer_copy, len, &memin);
+    BrotliMemInput memin;
+    BrotliInput in = BrotliInitMemInput(input, length, &memin);
 
+    BrotliOutput out;
     std::vector<uint8_t> output;
+
     out.cb_ = &output_callback;
     out.data_ = &output;
 
     ok = BrotliDecompress(in, out);
+    printf("len: %d, Result %d\n", length, ok);
     if (ok) {
       char *result = (char*)output.data();
       CAMLreturn(caml_copy_string(result));
