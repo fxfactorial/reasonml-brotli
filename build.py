@@ -5,6 +5,7 @@ import os
 import sys
 
 def build_dependencies_and_install():
+    oasis_result = subprocess.call(["oasis", "setup"])
     brotli_result = subprocess.call(["git", "clone",
                                      "https://github.com/google/brotli/"])
     libbrotli_result = subprocess.call(["git", "clone",
