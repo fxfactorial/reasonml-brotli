@@ -40,7 +40,7 @@ extern "C" {
     uint8_t *buffer = (uint8_t *)malloc(size);
     fread(buffer, size, 1, f);
     fflush(f);
-    return (struct result) {.len = size, .data = buffer};
+    return (struct result) {.len = static_cast<size_t>(size), .data = buffer};
   }
 
   CAMLprim value brotli_ml_decompress_buffer(value file_path)

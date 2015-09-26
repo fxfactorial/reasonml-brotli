@@ -29,7 +29,7 @@ Library brotli
   BuildTools:ocamlbuild
   install: true
   CClib: -lbrotli -lstdc++
-  CCOpt: -g -Wall -std=c++98 -x c++
+  CCOpt: -g -Wall -std=c++11 -x c++
   NativeOpt: -cc clang
   ByteOpt: -cc clang
   Modules: Brotli
