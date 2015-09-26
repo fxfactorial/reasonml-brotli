@@ -10,8 +10,8 @@ License:      BSD-3-clause
 Plugins:      META (0.4), DevFiles (0.4)
 AlphaFeatures: ocamlbuild_more_args
 
-# PreBuildCommand:
-#   python3 build.py
+PreBuildCommand:
+  python3 build.py
 
 Description:
   OCaml Bindings to brotli, Google's new compression algorithm
