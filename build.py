@@ -5,6 +5,7 @@ import os
 import sys
 
 def build_dependencies_and_install():
+    opam_result = subprocess.call(["opam", "install", "oasis", "lwt", "ocamlfind"])
     oasis_result = subprocess.call(["oasis", "setup"])
     brotli_result = subprocess.call(["git", "clone",
                                      "https://github.com/google/brotli/"])
