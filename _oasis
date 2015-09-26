@@ -4,7 +4,7 @@ Name:         brotli
 Version:      0.1
 Maintainers:  Edgar Aroutiounian
 Homepage:     http://hyegar.com
-Synopsis:     Bindings to google's brotli
+Synopsis:     Bindings to Google's Brotli compresion algorithm
 Authors:      Edgar Aroutiounian <edgar.factorial@gmail.com>
 License:      BSD-3-clause
 Plugins:      META (0.4), DevFiles (0.4)
@@ -15,6 +15,7 @@ Description:
 
   Source: https://github.com/google/brotli/
   RFC: http://www.ietf.org/id/draft-alakuijala-brotli
+  Comes with command line tool called brozip
 
 Executable brozip
   Path: src/app

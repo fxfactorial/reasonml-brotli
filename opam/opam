@@ -24,6 +24,7 @@ build-test: [
 ]
 depends: [
   "cmdliner" {build}
+  "lwt" {build}
   "oasis" {build & >= "0.4"}
   "ocamlfind" {build}
 ]
