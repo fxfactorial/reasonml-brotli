@@ -38,7 +38,5 @@ true: annot, bin_annot
 <src/app/*.ml{,i,y}>: package(lwt.unix)
 <src/app/*.ml{,i,y}>: use_brotli
 # OASIS_STOP
-"brotli": -traverse
-"brotli": not_hygienic
 "libbrotli": -traverse
 "libbrotli": not_hygienic
