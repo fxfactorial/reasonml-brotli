@@ -36,4 +36,3 @@ Library brotli
   # InternalModules: 
   CompiledObject: best
   CSources: brotli_stubs.c
-  BuildDepends: extlib

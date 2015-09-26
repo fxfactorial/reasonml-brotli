@@ -13,6 +13,7 @@
 #include <brotli/decode.h>
 
 #include <vector>
+#include <string>
 
 extern "C" {
 
@@ -23,19 +24,35 @@ extern "C" {
     return (int)count;
   }
 
-  CAMLprim value brotli_ml_decompress_buffer(value compressed_buffer)
+  struct result {
+    size_t len;
+    uint8_t *data;
+  };
+
+  static result pull_all_data(FILE *f)
   {
-    CAMLparam1(compressed_buffer);
-    uint8_t *input;
-    size_t length;
+    int size = 0;
+    fseek(f, 0, SEEK_END);
+    fflush(f);
+    size = ftell(f);
+    rewind(f);
+    fflush(f);
+    uint8_t *buffer = (uint8_t *)malloc(size);
+    fread(buffer, size, 1, f);
+    fflush(f);
+    return (struct result) {.len = size, .data = buffer};
+  }
+
+  CAMLprim value brotli_ml_decompress_buffer(value file_path)
+  {
+    CAMLparam1(file_path);
     int ok;
 
-    length = caml_string_length(compressed_buffer);
-    input = (unsigned char *)caml_strdup(String_val(compressed_buffer));
+    FILE *f = fopen(caml_strdup(String_val(file_path)), "rb");
+    struct result item = pull_all_data(f);
 
     BrotliMemInput memin;
-    BrotliInput in = BrotliInitMemInput(input, length, &memin);
-
+    BrotliInput in = BrotliInitMemInput(item.data, item.len, &memin);
     BrotliOutput out;
     std::vector<uint8_t> output;
 
@@ -43,10 +60,10 @@ extern "C" {
     out.data_ = &output;
 
     ok = BrotliDecompress(in, out);
-    printf("len: %d, Result %d\n", length, ok);
+    std::string str(output.begin(), output.end());
+
     if (ok) {
-      char *result = (char*)output.data();
-      CAMLreturn(caml_copy_string(result));
+      CAMLreturn(caml_copy_string(str.c_str()));
     } else {
       caml_failwith("Decompression error");
     }
