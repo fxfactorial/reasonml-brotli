@@ -1,26 +1,23 @@
-This is super alpha OCaml bindings to the new compression library
-release by Google called [brotli](https://github.com/google/brotli)
+These are alpha quality OCaml bindings to the new compression library
+released by Google called [brotli](https://github.com/google/brotli).
 
-# Make this work!
+# Installation
 
-Right now their repo doesn't even provide a build process, so to use
-this library you need to:
+I assume that you have [opam](https://opam.ocaml.org) installed, it is OCaml's package manager.
 
-1.  Go here <https://github.com/bagder/libbrotli> and follow the README's
-    steps, make sure you do the `make install` step.
-2.  Then `git clone` this repo and do
+All you have to do is:
 
 ```shell
-opam pin add brotli .
+$ opam pin add brotli .
 ```
 
-Now you will have OCaml bindings to the Decoder available and a
-command line utility named `brozip`
+and you'll have the `Brotli` module to use and the executable `brozip`
 
 # brozip usage
 
 Right now its quite simple, but since its built with `cmdliner`,
-there's a nice man page. Basically if you do 
+there's a nice man page, see it with `brozip --help` 
+Basically if you do 
 
 ```shell
 $ brozip fileone.compressed filetwo.compressed
