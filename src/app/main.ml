@@ -1,9 +1,16 @@
 open Cmdliner
 open Lwt
 
+let lwt_program files =
+  files |> Lwt_list.iter_p begin fun file ->
+    Filename.chop_extension file
+    |> Lwt_io.open_file ~mode:Lwt_io.Output >>= fun out ->
+    Brotli.decompress_buffer file |> Lwt_io.write out >>= fun _ ->
+    Lwt_io.close out
+  end
+
 let program items =
-  List.iter print_endline items;
-  `Ok ()
+  lwt_program items |> Lwt_main.run
 
 let compressed =
   let doc = "Source file(s) to copy." in
@@ -27,8 +34,5 @@ let cmd =
 let prog =
   match Term.eval cmd with
   | `Ok _ -> ()
-  | `Error _ -> prerr_endline "something went wrong"
+  | `Error _ -> ()
   | _ -> ()
-
-let () =
-  prog |> return |> Lwt_main.run
