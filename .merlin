@@ -1,2 +1,2 @@
 B _build/src/lib
-PKG cmdliner brotli
+PKG cmdliner brotli lwt

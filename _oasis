@@ -16,13 +16,13 @@ Description:
   Source: https://github.com/google/brotli/
   RFC: http://www.ietf.org/id/draft-alakuijala-brotli
 
-Executable obrotli
+Executable brozip
   Path: src/app
   BuildTools:ocamlbuild
   install: true
   MainIs: main.ml
   CompiledObject: native
-  BuildDepends: cmdliner, brotli
+  BuildDepends: cmdliner, brotli, lwt.unix
 
 Library brotli
   Path: src/lib
