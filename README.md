@@ -17,6 +17,17 @@ opam pin add brotli .
 Now you will have OCaml bindings to the Decoder available and a
 command line utility named `brozip`
 
+# brozip usage
+
+Right now its quite simple, but since its built with `cmdliner`,
+there's a nice man page. Basically if you do 
+
+```shell
+$ brozip fileone.compressed filetwo.compressed
+```
+
+then you'll get uncompressed files named `fileone`, `filetwo`
+
 # Issues
 
 1.  Because libbrotli is only exposing the decoder as a library, that's
