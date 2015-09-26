@@ -5,8 +5,10 @@ import os
 import sys
 
 def build_dependencies_and_install():
-    git_result = subprocess.call(["git", "submodule",
-                                  "update", "--recursive"])
+    brotli_result = subprocess.call(["git", "clone",
+                                     "https://github.com/google/brotli/"])
+    libbrotli_result = subprocess.call(["git", "clone",
+                                        "https://github.com/bagder/libbrotli"])
     mv_result = subprocess.call(["mv", "brotli", "libbrotli"])
     os.chdir("libbrotli")
     for command in ["libtoolize", "aclocal", "autoheader", "autoconf",
