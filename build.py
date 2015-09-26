@@ -24,4 +24,11 @@ def build_dependencies_and_install():
             else:
                 process_result = subprocess.call([command])
 
-build_dependencies_and_install()
+def clean_up():
+    rm_result = subprocess.call(["rm", "-rf", "libbrotli"])
+
+if __name__ == "__main__":
+    if sys.argv[1] == "--prepare":
+        build_dependencies_and_install()
+    elif sys.argv[1] == "--cleanup":
+        clean_up()

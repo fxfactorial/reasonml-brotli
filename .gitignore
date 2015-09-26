@@ -2,6 +2,10 @@ _build
 *.native
 *.byte
 *.docdir
+META
+*.mldylib
+*.mllib
+*.clib
 
 tests/*.cmi
 tests/*.cmt
