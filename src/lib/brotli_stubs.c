@@ -50,6 +50,7 @@ extern "C" {
 
     FILE *f = fopen(caml_strdup(String_val(file_path)), "rb");
     struct result item = pull_all_data(f);
+    fclose(f);
 
     BrotliMemInput memin;
     BrotliInput in = BrotliInitMemInput(item.data, item.len, &memin);
@@ -63,8 +64,10 @@ extern "C" {
     std::string str(output.begin(), output.end());
 
     if (ok) {
+      free(item.data);
       CAMLreturn(caml_copy_string(str.c_str()));
     } else {
+      free(item.data);
       caml_failwith("Decompression error");
     }
   }
