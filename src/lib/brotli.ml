@@ -15,6 +15,12 @@ external unpack_data_to_bigarray :
   ('char, 'int8_unsigned_elt, 'layout) Bigarray.Array1.t
   = "brotli_ml_decompress_in_mem"
 
+external pack_data_to_path :
+  string ->
+  ('char, 'int8_unsigned_elt, 'layout) Bigarray.Array1.t ->
+  unit
+  = "brotli_ml_compress_path"
+
 let barray_of_path file_src =
   let open Lwt_unix in
   stat file_src >>= fun size ->
@@ -42,7 +48,6 @@ end
 module Compress = struct
 
   let compress_to_path ~file_src dest =
-
-    return ()
+    barray_of_path file_src >|= (pack_data_to_path dest)
 
 end

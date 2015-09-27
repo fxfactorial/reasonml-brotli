@@ -102,4 +102,14 @@ extern "C" {
       caml_failwith("Decompression Error");
     }
   }
+
+  CAMLprim value brotli_ml_compress_path(value file_dest, value this_barray)
+  {
+    CAMLparam2(file_dest, this_barray);
+
+    char *write_to_path = caml_strdup(String_val(file_dest));
+    printf("Called for path: %s\n", write_to_path);
+    free(write_to_path);
+    CAMLreturn(Val_unit);
+  }
 }
