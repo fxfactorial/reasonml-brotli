@@ -22,7 +22,6 @@
 #include <iostream>
 #include <iterator>
 
-
 extern "C" {
 
   int output_callback(void *data, const uint8_t *buf, size_t count)
@@ -32,9 +31,9 @@ extern "C" {
     return (int)count;
   }
 
-  CAMLprim value brotli_ml_decompress_paths(value this_barray, value file_dest)
+  CAMLprim value brotli_ml_decompress_path(value file_dest, value this_barray)
   {
-    CAMLparam2(this_barray, file_dest);
+    CAMLparam2(file_dest, this_barray);
     int ok;
     char *save_path = caml_strdup(String_val(file_dest));
 
@@ -66,5 +65,13 @@ extern "C" {
       free(save_path);
       caml_failwith("Decompression Error");
     }
+  }
+  CAMLprim value brotli_ml_decompress_in_mem(value this_barray)
+  {
+    CAMLparam1(this_barray);
+
+    printf("Called decompress_in_mem");
+
+    CAMLreturn(this_barray);
   }
 }
