@@ -12,12 +12,13 @@ $ opam pin add brotli .
 ```
 
 and you'll have the `Brotli` module to use and the executable `brozip`
+(which can decompress and soon compress files concurrently)
 
 # brozip usage
 
-Right now its quite simple, but since its built with `cmdliner`,
-there's a nice man page, see it with `brozip --help` 
-Basically if you do 
+Right now its quite simple but still concurrent, but since its built
+with `cmdliner`, there's a nice man page, see it with `brozip --help`
+Basically if you do
 
 ```shell
 $ brozip fileone.compressed filetwo.compressed

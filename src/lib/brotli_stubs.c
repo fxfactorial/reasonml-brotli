@@ -66,12 +66,39 @@ extern "C" {
       caml_failwith("Decompression Error");
     }
   }
+
   CAMLprim value brotli_ml_decompress_in_mem(value this_barray)
   {
     CAMLparam1(this_barray);
+    CAMLlocal1(as_bigarray);
 
-    printf("Called decompress_in_mem");
+    int ok;
+    uint8_t *raw_data = (uint8_t*)Caml_ba_data_val(this_barray);
+    size_t size = Caml_ba_array_val(this_barray)->dim[0];
 
-    CAMLreturn(this_barray);
+    BrotliMemInput memin;
+    BrotliInput in = BrotliInitMemInput(raw_data, size, &memin);
+    BrotliOutput out;
+    std::vector<uint8_t> output;
+
+    out.cb_ = &output_callback;
+    out.data_ = &output;
+
+    caml_enter_blocking_section();
+    ok = BrotliDecompress(in, out);
+    caml_leave_blocking_section();
+
+    long dims[0];
+    dims[0] = output.size();
+
+    if (ok) {
+      as_bigarray = caml_ba_alloc(CAML_BA_UINT8 | CAML_BA_C_LAYOUT,
+				  1,
+				  output.data(),
+				  dims);
+      CAMLreturn(as_bigarray);
+    } else {
+      caml_failwith("Decompression Error");
+    }
   }
 }
