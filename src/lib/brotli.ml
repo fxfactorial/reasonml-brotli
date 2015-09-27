@@ -1,7 +1,3 @@
-
-(** Decompress a compressed file as a bytes string *)
-external file_to_string : bytes  -> bytes = "brotli_ml_decompress_buffer"
-
 (** Raw call to decompress the big array to the given target file path *)
 external unpack_data_raw :
   ('char, 'int8_unsigned_elt, 'layout) Bigarray.Array1.t -> string -> unit = "brotli_ml_decompress_paths"
