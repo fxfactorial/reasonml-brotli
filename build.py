@@ -11,7 +11,7 @@ def build_dependencies_and_install():
     brotli_result = subprocess.call(["git", "clone",
                                      "https://github.com/google/brotli/"])
     libbrotli_result = subprocess.call(["git", "clone",
-                                        "https://github.com/bagder/libbrotli"])
+                                        "https://github.com/fxfactorial/libbrotli"])
     mv_result = subprocess.call(["mv", "brotli", "libbrotli"])
     os.chdir("libbrotli")
     for command in ["libtoolize", "aclocal", "autoheader", "autoconf",
