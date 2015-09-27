@@ -26,11 +26,23 @@ let barray_of_path file_src =
   close fd >|= fun () ->
   this_bigarray
 
-let decompress_to_path ?file_dest file_src =
-  let do_inflate p = barray_of_path file_src >|= unpack_data_to_path p in
-  match file_dest with
-  | Some p -> do_inflate p
-  | None -> do_inflate (Filename.chop_extension file_src)
+module Decompress = struct
 
-let decompress_to_mem file_src =
-  barray_of_path file_src >|= unpack_data_to_bigarray
+  let decompress_to_path ?file_dest file_src =
+    let do_inflate p = barray_of_path file_src >|= unpack_data_to_path p in
+    match file_dest with
+    | Some p -> do_inflate p
+    | None -> do_inflate (Filename.chop_extension file_src)
+
+  let decompress_to_mem file_src =
+    barray_of_path file_src >|= unpack_data_to_bigarray
+
+end
+
+module Compress = struct
+
+  let compress_to_path ~file_src dest =
+
+    return ()
+
+end

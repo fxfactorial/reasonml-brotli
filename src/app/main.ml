@@ -1,9 +1,10 @@
 open Cmdliner
 open Lwt
+open Brotli
 
 let lwt_program files =
   files |> Lwt_list.iter_p begin fun file ->
-    Brotli.decompress_to_path file
+    Decompress.decompress_to_path file
   end
 
 let program items =

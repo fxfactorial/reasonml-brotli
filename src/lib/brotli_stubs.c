@@ -14,6 +14,7 @@
 #include <caml/signals.h>
 // Brotli itself
 #include <brotli/dec/decode.h>
+#include <brotli/enc/encode.h>
 //C++
 #include <vector>
 #include <string>
