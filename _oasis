@@ -44,3 +44,13 @@ Library brotli
   CompiledObject: best
   CSources: brotli_stubs.c
   BuildDepends: lwt.unix
+
+Document api
+  Title: API reference for brotli
+  Type: ocamlbuild (0.4)
+  Authors: Edgar Aroutiounian
+  BuildTools: ocamldoc, ocamlbuild
+  Format: HTML
+  Index: index.html
+  XOCamlbuildPath: .
+  XOCamlbuildLibraries: brotli
