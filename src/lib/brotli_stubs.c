@@ -13,7 +13,7 @@
 #include <caml/callback.h>
 #include <caml/signals.h>
 // Brotli itself
-#include <brotli/decode.h>
+#include <brotli/dec/decode.h>
 //C++
 #include <vector>
 #include <string>
