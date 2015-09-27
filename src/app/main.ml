@@ -3,10 +3,7 @@ open Lwt
 
 let lwt_program files =
   files |> Lwt_list.iter_p begin fun file ->
-    Filename.chop_extension file
-    |> Lwt_io.open_file ~mode:Lwt_io.Output >>= fun out ->
-    Brotli.decompress_buffer file |> Lwt_io.write out >>= fun _ ->
-    Lwt_io.close out
+    Brotli.decompress file
   end
 
 let program items =

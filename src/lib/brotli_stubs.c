@@ -8,6 +8,7 @@
 #include <caml/alloc.h>
 #include <caml/memory.h>
 #include <caml/fail.h>
+#include <caml/bigarray.h>
 #include <caml/callback.h>
 // Brotli itself
 #include <brotli/decode.h>
@@ -43,6 +44,13 @@ extern "C" {
     return (struct result) {.len = static_cast<size_t>(size), .data = buffer};
   }
 
+  CAMLprim value brotli_ml_decompress_paths(value this_barray)
+  {
+    CAMLparam1(this_barray);
+    printf("Called big array\n");
+    CAMLreturn(Val_unit);
+  }
+
   CAMLprim value brotli_ml_decompress_buffer(value file_path)
   {
     CAMLparam1(file_path);
@@ -54,6 +62,7 @@ extern "C" {
 
     BrotliMemInput memin;
     BrotliInput in = BrotliInitMemInput(item.data, item.len, &memin);
+    free(item.data);
     BrotliOutput out;
     std::vector<uint8_t> output;
 
@@ -64,10 +73,9 @@ extern "C" {
     std::string str(output.begin(), output.end());
 
     if (ok) {
-      free(item.data);
+      //This is incorrect.
       CAMLreturn(caml_copy_string(str.c_str()));
     } else {
-      free(item.data);
       caml_failwith("Decompression error");
     }
   }
