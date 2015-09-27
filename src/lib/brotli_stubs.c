@@ -15,6 +15,11 @@
 
 #include <vector>
 #include <string>
+#include <fstream>
+#include <algorithm>
+#include <iostream>
+#include <iterator>
+
 
 extern "C" {
 
@@ -44,10 +49,32 @@ extern "C" {
     return (struct result) {.len = static_cast<size_t>(size), .data = buffer};
   }
 
-  CAMLprim value brotli_ml_decompress_paths(value this_barray)
+  CAMLprim value brotli_ml_decompress_paths(value this_barray, value file_dest)
   {
-    CAMLparam1(this_barray);
-    printf("Called big array\n");
+    CAMLparam2(this_barray, file_dest);
+    int ok;
+    char *save_path = caml_strdup(String_val(file_dest));
+
+    uint8_t *raw_data = (uint8_t*)Caml_ba_data_val(this_barray);
+    // Since this is only 1 dimensional array, we only check the 0th entry.
+    size_t size = Caml_ba_array_val(this_barray)->dim[0];
+
+    BrotliMemInput memin;
+    BrotliInput in = BrotliInitMemInput(raw_data, size, &memin);
+    BrotliOutput out;
+    std::vector<uint8_t> output;
+
+    out.cb_ = &output_callback;
+    out.data_ = &output;
+
+    ok = BrotliDecompress(in, out);
+    std::ofstream output_file(save_path);
+
+    std::ofstream FILE(save_path, std::ofstream::binary);
+    std::copy(output.begin(),
+	      output.end(),
+	      std::ostreambuf_iterator<char>(FILE));
+    free(save_path);
     CAMLreturn(Val_unit);
   }
 
