@@ -21,6 +21,11 @@ external pack_data_to_path :
   unit
   = "brotli_ml_compress_path"
 
+external pack_data_to_bigarray :
+  ('char, 'int8_unsigned_elt, 'layout) Bigarray.Array1.t ->
+  ('char, 'int8_unsigned_elt, 'layout) Bigarray.Array1.t
+  = "brotli_ml_compress_in_mem"
+
 let barray_of_path file_src =
   let open Lwt_unix in
   stat file_src >>= fun size ->
@@ -34,9 +39,9 @@ let barray_of_path file_src =
 
 module Decompress = struct
 
-  let decompress_to_path ?file_dest file_src =
+  let decompress_to_path ?file_dst ~file_src =
     let do_inflate p = barray_of_path file_src >|= unpack_data_to_path p in
-    match file_dest with
+    match file_dst with
     | Some p -> do_inflate p
     | None -> do_inflate (Filename.chop_extension file_src)
 
@@ -47,7 +52,10 @@ end
 
 module Compress = struct
 
-  let compress_to_path ~file_src dest =
-    barray_of_path file_src >|= (pack_data_to_path dest)
+  let compress_to_mem file_src =
+    barray_of_path file_src >|= pack_data_to_bigarray
+
+  let compress_to_path ~file_src ~file_dst =
+    barray_of_path file_src >|= (pack_data_to_path file_dst)
 
 end

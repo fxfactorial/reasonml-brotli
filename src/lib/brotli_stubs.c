@@ -108,8 +108,22 @@ extern "C" {
     CAMLparam2(file_dest, this_barray);
 
     char *write_to_path = caml_strdup(String_val(file_dest));
-    printf("Called for path: %s\n", write_to_path);
+    int ok;
+
+    uint8_t *raw_data = (uint8_t*)Caml_ba_data_val(this_barray);
+    size_t size = Caml_ba_array_val(this_barray)->dim[0];
+
     free(write_to_path);
     CAMLreturn(Val_unit);
+  }
+
+  CAMLprim value brotli_ml_compress_in_mem(value this_barray)
+  {
+    CAMLparam1(this_barray);
+
+    uint8_t *raw_data = (uint8_t*)Caml_ba_data_val(this_barray);
+    size_t size = Caml_ba_array_val(this_barray)->dim[0];
+
+    CAMLreturn(this_barray);
   }
 }

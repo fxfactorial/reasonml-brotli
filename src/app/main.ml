@@ -3,8 +3,10 @@ open Lwt
 open Brotli
 
 let lwt_program files =
-  files |> Lwt_list.iter_p begin fun file ->
-    Decompress.decompress_to_path file
+  files |> Lwt_list.iter_p begin fun file_src ->
+    (* Compress.compress_to_path ~file_src ~file_dst:"TEST.compressed" *)
+    (Compress.compress_to_mem file_src) |> ignore |> return
+    (* Decompress.decompress_to_path file *)
   end
 
 let program items =
