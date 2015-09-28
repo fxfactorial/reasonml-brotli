@@ -1,18 +1,18 @@
-These are alpha quality OCaml bindings to the new compression library
-released by Google called [brotli](https://github.com/google/brotli).
+These are OCaml bindings to the new compression library released by
+Google called [brotli](https://github.com/google/brotli) along with a command line tool called `brozip`
 
 # Installation
 
 I assume that you have [opam](https://opam.ocaml.org) installed, it is OCaml's package manager.
 
-All you have to do is:
+All you have to do, until I get this up on `opam` is:
 
 ```shell
 $ opam pin add brotli .
 ```
 
 and you'll have the `Brotli` module to use and the executable `brozip`
-(which can decompress and soon compress files concurrently)
+which can decompress, compress files concurrently
 
 # brozip usage
 
@@ -28,6 +28,6 @@ then you'll get uncompressed files named `fileone`, `filetwo`
 
 # Issues
 
-1.  Because libbrotli is only exposing the decoder as a library, that's
-    I have I to link against, aka no compressing yet.
-2.  I suck at `C++`
+1.  I suck at `C++` so its maybe not the most idiomatic but it works.
+2.  Some low hanging fruit available for refactoring, leaving it for a
+    pull request for a developer eager to get into open-source.
