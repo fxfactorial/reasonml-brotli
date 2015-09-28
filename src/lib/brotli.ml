@@ -1,15 +1,11 @@
 open Lwt
 
-(** Raw call to decompress the big array to the given target file
-    path *)
 external unpack_data_to_path :
   string ->
   ('char, 'int8_unsigned_elt, 'layout) Bigarray.Array1.t ->
   unit
   = "brotli_ml_decompress_path"
 
-(** Decompress a Brotli compressed Bigarray and get back a
-    decompressed Bigarray *)
 external unpack_data_to_bigarray :
   ('char, 'int8_unsigned_elt, 'layout) Bigarray.Array1.t ->
   ('char, 'int8_unsigned_elt, 'layout) Bigarray.Array1.t
@@ -25,6 +21,23 @@ external pack_data_to_bigarray :
   ('char, 'int8_unsigned_elt, 'layout) Bigarray.Array1.t ->
   ('char, 'int8_unsigned_elt, 'layout) Bigarray.Array1.t
   = "brotli_ml_compress_in_mem"
+
+let barray_to_bytes barray =
+  let b_size = Bigarray.Array1.dim barray in
+  (* Any way to do this without having to make this string? *)
+  let as_bytes = Bytes.create b_size in
+  for i = 0 to b_size - 1 do
+    Bytes.set as_bytes i (Bigarray.Array1.unsafe_get barray i)
+  done;
+  as_bytes
+
+let bytes_to_barray bytes =
+  let open Bigarray in
+  let b_array = Array1.create Char C_layout (String.length bytes) in
+  for i = 0 to String.length bytes - 1 do
+    Array1.unsafe_set b_array i bytes.[i]
+  done;
+  b_array
 
 let barray_of_path file_src =
   let open Lwt_unix in
@@ -54,8 +67,8 @@ module Compress = struct
 
   type mode =
     | Generic (** Compression is not aware of any special features of input *)
-    | Text (** Compression knows that input is UTF-8 *)
-    | Font (** Compression knows that input is WOFF 2.0 *)
+    | Text    (** Compression knows that input is UTF-8 *)
+    | Font    (** Compression knows that input is WOFF 2.0 *)
 
   let to_mem file_src =
     barray_of_path file_src >|= pack_data_to_bigarray
@@ -63,9 +76,9 @@ module Compress = struct
   let to_path ~file_src ~file_dst =
     barray_of_path file_src >|= (pack_data_to_path file_dst)
 
-  external raw_to_bytes : bytes -> bytes = "brotli_ml_compress_to_bytes"
-
   let to_bytes ?(mode=Generic) ?(quality=11) ?(lgwin=22) ?(lgblock=0) s =
-    raw_to_bytes s |> return
+    (* Turn the bytes string into bigarray, then compress big array
+       into memory, turn big array back into bytes string *)
+    bytes_to_barray s |> pack_data_to_bigarray |> barray_to_bytes |> return
 
 end

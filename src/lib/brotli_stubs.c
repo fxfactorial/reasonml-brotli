@@ -128,28 +128,22 @@ extern "C" {
     uint8_t *raw_data = (uint8_t*)Caml_ba_data_val(this_barray);
     size_t size = Caml_ba_array_val(this_barray)->dim[0];
 
-    BrotliParams::Mode mode = (BrotliParams::Mode) 0;
-    BrotliParams params;
-    params.mode = mode;
+  /*   size_t length = caml_string_length(this_data); */
+  /*   size_t output_length = 1.2 *  length + 10240; */
+  /*   uint8_t *output = new uint8_t[output_length]; */
+
+  /*   BrotliParams::Mode mode = (BrotliParams::Mode) 0; */
+  /*   BrotliParams params; */
+  /*   params.mode = mode; */
+  /*   params.quality = 2; */
+  /*   params.lgwin = 10; */
+  /*   params.lgblock = 20; */
+
+  /*   ok = BrotliCompressBuffer(params, length, input, */
+  /*   			      &output_length, output); */
 
 
     CAMLreturn(this_barray);
   }
 
-  CAMLprim value brotli_ml_compress_to_bytes(value this_data)
-  {
-    CAMLparam1(this_data);
-
-    BrotliParams::Mode mode = (BrotliParams::Mode) 0;
-    BrotliParams params;
-    params.mode = mode;
-    params.quality = 2;
-    params.lgwin = 10;
-    params.lgblock = 20;
-
-    /* ok = BrotliCompressBuffer(params, length, input, */
-    /* 			      &output_length, output); */
-
-    CAMLreturn(caml_copy_string("42"));
-  }
 }
