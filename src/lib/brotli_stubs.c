@@ -23,6 +23,8 @@
 #include <iostream>
 #include <iterator>
 
+using namespace brotli;
+
 extern "C" {
 
   int output_callback(void *data, const uint8_t *buf, size_t count)
@@ -113,6 +115,8 @@ extern "C" {
     uint8_t *raw_data = (uint8_t*)Caml_ba_data_val(this_barray);
     size_t size = Caml_ba_array_val(this_barray)->dim[0];
 
+    BrotliParams::Mode mode = (BrotliParams::Mode) 0;
+
     free(write_to_path);
     CAMLreturn(Val_unit);
   }
@@ -124,6 +128,28 @@ extern "C" {
     uint8_t *raw_data = (uint8_t*)Caml_ba_data_val(this_barray);
     size_t size = Caml_ba_array_val(this_barray)->dim[0];
 
+    BrotliParams::Mode mode = (BrotliParams::Mode) 0;
+    BrotliParams params;
+    params.mode = mode;
+
+
     CAMLreturn(this_barray);
+  }
+
+  CAMLprim value brotli_ml_compress_to_bytes(value this_data)
+  {
+    CAMLparam1(this_data);
+
+    BrotliParams::Mode mode = (BrotliParams::Mode) 0;
+    BrotliParams params;
+    params.mode = mode;
+    params.quality = 2;
+    params.lgwin = 10;
+    params.lgblock = 20;
+
+    /* ok = BrotliCompressBuffer(params, length, input, */
+    /* 			      &output_length, output); */
+
+    CAMLreturn(caml_copy_string("42"));
   }
 }

@@ -39,23 +39,33 @@ let barray_of_path file_src =
 
 module Decompress = struct
 
-  let decompress_to_path ?file_dst ~file_src =
+  let to_path ?file_dst ~file_src =
     let do_inflate p = barray_of_path file_src >|= unpack_data_to_path p in
     match file_dst with
     | Some p -> do_inflate p
     | None -> do_inflate (Filename.chop_extension file_src)
 
-  let decompress_to_mem file_src =
+  let to_mem file_src =
     barray_of_path file_src >|= unpack_data_to_bigarray
 
 end
 
 module Compress = struct
 
-  let compress_to_mem file_src =
+  type mode =
+    | Generic (** Compression is not aware of any special features of input *)
+    | Text (** Compression knows that input is UTF-8 *)
+    | Font (** Compression knows that input is WOFF 2.0 *)
+
+  let to_mem file_src =
     barray_of_path file_src >|= pack_data_to_bigarray
 
-  let compress_to_path ~file_src ~file_dst =
+  let to_path ~file_src ~file_dst =
     barray_of_path file_src >|= (pack_data_to_path file_dst)
+
+  external raw_to_bytes : bytes -> bytes = "brotli_ml_compress_to_bytes"
+
+  let to_bytes ?(mode=Generic) ?(quality=11) ?(lgwin=22) ?(lgblock=0) s =
+    raw_to_bytes s |> return
 
 end

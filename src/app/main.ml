@@ -4,9 +4,7 @@ open Brotli
 
 let lwt_program files =
   files |> Lwt_list.iter_p begin fun file_src ->
-    (* Compress.compress_to_path ~file_src ~file_dst:"TEST.compressed" *)
-    (Compress.compress_to_mem file_src) |> ignore |> return
-    (* Decompress.decompress_to_path file *)
+    Compress.to_bytes "Hello Crazy world on what." >|= print_endline
   end
 
 let program items =
