@@ -4,7 +4,7 @@ open Brotli
 
 let lwt_program files =
   files |> Lwt_list.iter_p begin fun file_src ->
-    Compress.to_bytes "Hello Crazy world on what." >|= print_endline
+    Decompress.to_path file_src
   end
 
 let program items =
@@ -21,7 +21,8 @@ let cmd =
   let man = [`S "AUTHOR";
              `P "brozip was written by Edgar Aroutiounian";
              `S "BUGS";
-             `P "See development at http://github.com/fxfactorial/ocaml-brotli";
+             `P "See development at http://github.com/fxfactorial/ocaml-brotli \
+                 and file bug reports there.";
              `S "MISC";
              `P "$(tname) is written in OCaml with bindings to Google's \
                  Brotli C/C++ library"]

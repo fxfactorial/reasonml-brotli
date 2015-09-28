@@ -28,8 +28,8 @@ module Compress : sig
 
   type mode =
     | Generic (** Compression is not aware of any special features of input *)
-    | Text (** Compression knows that input is UTF-8 *)
-    | Font (** Compression knows that input is WOFF 2.0 *)
+    | Text    (** Compression knows that input is UTF-8 *)
+    | Font    (** Compression knows that input is WOFF 2.0 *)
 
   (** Compress a file given at file_src and write the compressed file
       to file_dst *)
