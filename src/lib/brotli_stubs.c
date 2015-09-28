@@ -109,41 +109,50 @@ extern "C" {
   {
     CAMLparam2(file_dest, this_barray);
 
-    char *write_to_path = caml_strdup(String_val(file_dest));
-    int ok;
+    /* char *write_to_path = caml_strdup(String_val(file_dest)); */
+    /* int ok; */
 
-    uint8_t *raw_data = (uint8_t*)Caml_ba_data_val(this_barray);
-    size_t size = Caml_ba_array_val(this_barray)->dim[0];
+    /* uint8_t *raw_data = (uint8_t*)Caml_ba_data_val(this_barray); */
+    /* size_t size = Caml_ba_array_val(this_barray)->dim[0]; */
 
-    BrotliParams::Mode mode = (BrotliParams::Mode) 0;
+    /* BrotliParams::Mode mode = (BrotliParams::Mode) 0; */
 
-    free(write_to_path);
+    /* free(write_to_path); */
     CAMLreturn(Val_unit);
   }
 
   CAMLprim value brotli_ml_compress_in_mem(value this_barray)
   {
     CAMLparam1(this_barray);
+    CAMLlocal1(as_bigarray);
+    int ok;
 
-    uint8_t *raw_data = (uint8_t*)Caml_ba_data_val(this_barray);
-    size_t size = Caml_ba_array_val(this_barray)->dim[0];
+    uint8_t *input = (uint8_t*)Caml_ba_data_val(this_barray);
+    size_t length = Caml_ba_array_val(this_barray)->dim[0];
+    size_t output_length = 1.2 *  length + 10240;
+    uint8_t *output = new uint8_t[output_length];
 
-  /*   size_t length = caml_string_length(this_data); */
-  /*   size_t output_length = 1.2 *  length + 10240; */
-  /*   uint8_t *output = new uint8_t[output_length]; */
+    BrotliParams::Mode mode = (BrotliParams::Mode) 0;
+    BrotliParams params;
+    params.mode = mode;
+    params.quality = 2;
+    params.lgwin = 10;
+    params.lgblock = 20;
 
-  /*   BrotliParams::Mode mode = (BrotliParams::Mode) 0; */
-  /*   BrotliParams params; */
-  /*   params.mode = mode; */
-  /*   params.quality = 2; */
-  /*   params.lgwin = 10; */
-  /*   params.lgblock = 20; */
+    ok = BrotliCompressBuffer(params, length, input,
+    			      &output_length, output);
 
-  /*   ok = BrotliCompressBuffer(params, length, input, */
-  /*   			      &output_length, output); */
+    long dims[0];
+    dims[0] = output_length;
 
-
-    CAMLreturn(this_barray);
+    if (ok) {
+      as_bigarray = caml_ba_alloc(CAML_BA_UINT8 | CAML_BA_C_LAYOUT,
+				  1,
+				  output,
+				  dims);
+      CAMLreturn(as_bigarray);
+    } else {
+      caml_failwith("Compression Error");
+    }
   }
-
 }

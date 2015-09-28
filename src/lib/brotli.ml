@@ -34,7 +34,7 @@ let barray_to_bytes barray =
 let bytes_to_barray bytes =
   let open Bigarray in
   let b_array = Array1.create Char C_layout (String.length bytes) in
-  for i = 0 to String.length bytes - 1 do
+  for i = 0 to Bytes.length bytes - 1 do
     Array1.unsafe_set b_array i bytes.[i]
   done;
   b_array

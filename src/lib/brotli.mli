@@ -1,6 +1,13 @@
 (** OCaml bindings to the Brotli compression library, uses Bigarrays
     for performance *)
 
+(** Create a bytes string from a Bigarray *)
+val barray_to_bytes : (char, 'a, 'b) Bigarray.Array1.t -> bytes
+
+(** Create a Bigarray out from a bytes string *)
+val bytes_to_barray : bytes ->
+  (char, Bigarray.int8_unsigned_elt, Bigarray.c_layout) Bigarray.Array1.t
+
 module Decompress : sig
 
   (** Decompresses a file given at file_src and store at destination,
