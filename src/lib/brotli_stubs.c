@@ -109,16 +109,40 @@ extern "C" {
   {
     CAMLparam2(file_dest, this_barray);
 
-    /* char *write_to_path = caml_strdup(String_val(file_dest)); */
-    /* int ok; */
+    char *save_path = caml_strdup(String_val(file_dest));
+    int ok;
 
-    /* uint8_t *raw_data = (uint8_t*)Caml_ba_data_val(this_barray); */
-    /* size_t size = Caml_ba_array_val(this_barray)->dim[0]; */
+    uint8_t *input = (uint8_t*)Caml_ba_data_val(this_barray);
+    size_t length = Caml_ba_array_val(this_barray)->dim[0];
 
-    /* BrotliParams::Mode mode = (BrotliParams::Mode) 0; */
+    size_t output_length = 1.2 *  length + 10240;
+    uint8_t *output = new uint8_t[output_length];
 
-    /* free(write_to_path); */
-    CAMLreturn(Val_unit);
+    BrotliParams::Mode mode = (BrotliParams::Mode) 0;
+    BrotliParams params;
+    params.mode = mode;
+    params.quality = 2;
+    params.lgwin = 10;
+    params.lgblock = 20;
+
+    caml_enter_blocking_section();
+    ok = BrotliCompressBuffer(params, length, input,
+    			      &output_length, output);
+    caml_leave_blocking_section();
+
+    if (ok) {
+      std::ofstream output_file(save_path);
+      free(save_path);
+      std::ofstream FILE(save_path, std::ofstream::binary);
+      std::copy(output,
+      		output + output_length,
+      		std::ostreambuf_iterator<char>(FILE));
+      delete[] output;
+      CAMLreturn(Val_unit);
+    } else {
+      delete[] output;
+      caml_failwith("Compression Error");
+    }
   }
 
   CAMLprim value brotli_ml_compress_in_mem(value this_barray)
@@ -139,8 +163,10 @@ extern "C" {
     params.lgwin = 10;
     params.lgblock = 20;
 
+    caml_enter_blocking_section();
     ok = BrotliCompressBuffer(params, length, input,
     			      &output_length, output);
+    caml_leave_blocking_section();
 
     long dims[0];
     dims[0] = output_length;
@@ -150,8 +176,10 @@ extern "C" {
 				  1,
 				  output,
 				  dims);
+      delete[] output;
       CAMLreturn(as_bigarray);
     } else {
+      delete[] output;
       caml_failwith("Compression Error");
     }
   }
