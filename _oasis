@@ -21,18 +21,9 @@ Description:
 
   Source: https://github.com/google/brotli/
   RFC: http://www.ietf.org/id/draft-alakuijala-brotli
-  Comes with command line tool called brozip
-
-Executable brozip
-  Path: src/app
-  BuildTools:ocamlbuild
-  install: true
-  MainIs: main.ml
-  CompiledObject: native
-  BuildDepends: cmdliner, brotli, lwt.unix, lwt.ppx
 
 Library brotli
-  Path: src/lib
+  Path: src
   BuildTools:ocamlbuild
   install: true
   CClib: -lbrotli -lstdc++
