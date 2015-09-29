@@ -120,12 +120,11 @@ extern "C" {
     size_t output_length = 1.2 *  length + 10240;
     uint8_t *output = new uint8_t[output_length];
 
-    BrotliParams::Mode mode = (BrotliParams::Mode) 0;
     BrotliParams params;
-    params.mode = mode;
-    params.quality = 2;
-    params.lgwin = 10;
-    params.lgblock = 20;
+    params.mode = (BrotliParams::Mode)Int_val(Field(ml_params, 0));
+    params.quality = Int_val(Field(ml_params, 1));
+    params.lgwin = Int_val(Field(ml_params, 2));
+    params.lgblock = Int_val(Field(ml_params, 3));
 
     caml_enter_blocking_section();
     ok = BrotliCompressBuffer(params, length, input,
@@ -159,12 +158,11 @@ extern "C" {
     size_t output_length = 1.2 *  length + 10240;
     uint8_t *output = new uint8_t[output_length];
 
-    BrotliParams::Mode mode = (BrotliParams::Mode) 0;
     BrotliParams params;
-    params.mode = mode;
-    params.quality = 2;
-    params.lgwin = 10;
-    params.lgblock = 20;
+    params.mode = (BrotliParams::Mode)Int_val(Field(ml_params, 0));
+    params.quality = Int_val(Field(ml_params, 1));
+    params.lgwin = Int_val(Field(ml_params, 2));
+    params.lgblock = Int_val(Field(ml_params, 3));
 
     caml_enter_blocking_section();
     ok = BrotliCompressBuffer(params, length, input,
