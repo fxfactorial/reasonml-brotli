@@ -1,5 +1,5 @@
 # OASIS_START
-# DO NOT EDIT (digest: 20c9dbad8cef91b240384070c3195d47)
+# DO NOT EDIT (digest: 627489ee33c8230a3ddfe64b9050da2f)
 # Ignore VCS directories, you can use the same kind of rule outside
 # OASIS_START/STOP if you want to exclude directories that contains
 # useless stuff for the build process
@@ -30,13 +30,17 @@ true: annot, bin_annot
 <src/lib/*.ml{,i,y}>: oasis_library_brotli_native
 "src/lib/brotli_stubs.c": oasis_library_brotli_native
 <src/lib/brotli.{cma,cmxa}>: use_libbrotli_stubs
+<src/lib/*.ml{,i,y}>: package(lwt.ppx)
 <src/lib/*.ml{,i,y}>: package(lwt.unix)
+"src/lib/brotli_stubs.c": package(lwt.ppx)
 "src/lib/brotli_stubs.c": package(lwt.unix)
 # Executable brozip
 "src/app/main.native": package(cmdliner)
+"src/app/main.native": package(lwt.ppx)
 "src/app/main.native": package(lwt.unix)
 "src/app/main.native": use_brotli
 <src/app/*.ml{,i,y}>: package(cmdliner)
+<src/app/*.ml{,i,y}>: package(lwt.ppx)
 <src/app/*.ml{,i,y}>: package(lwt.unix)
 <src/app/*.ml{,i,y}>: use_brotli
 # OASIS_STOP

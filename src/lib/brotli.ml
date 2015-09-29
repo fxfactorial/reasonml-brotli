@@ -52,14 +52,21 @@ let barray_of_path file_src =
 
 module Decompress = struct
 
+  type exn += Decompression_failure of string
+
+  let try_it = function
+    | t -> try%lwt t with Failure s -> raise (Decompression_failure s)
+
   let to_path ?file_dst ~file_src =
-    let do_inflate p = barray_of_path file_src >|= unpack_data_to_path p in
+    let do_inflate p =
+        barray_of_path file_src >|= unpack_data_to_path p |> try_it
+    in
     match file_dst with
     | Some p -> do_inflate p
     | None -> do_inflate (Filename.chop_extension file_src)
 
   let to_mem file_src =
-    barray_of_path file_src >|= unpack_data_to_bigarray
+      barray_of_path file_src >|= unpack_data_to_bigarray |> try_it
 
 end
 
@@ -70,15 +77,25 @@ module Compress = struct
     | Text    (** Compression knows that input is UTF-8 *)
     | Font    (** Compression knows that input is WOFF 2.0 *)
 
+  type exn += Compression_failure of string
+  type exn += Compression_param_invalid of string
+
+  (* let validate_parameters q lgwin lgblock = *)
+
+  let try_it = function
+    | t -> try%lwt t with | Failure s -> raise (Compression_failure s)
+
   let to_mem file_src =
-    barray_of_path file_src >|= pack_data_to_bigarray
+    barray_of_path file_src >|= pack_data_to_bigarray |> try_it
 
   let to_path ~file_src ~file_dst =
-    barray_of_path file_src >|= (pack_data_to_path file_dst)
+    barray_of_path file_src >|= (pack_data_to_path file_dst) |> try_it
 
   let to_bytes ?(mode=Generic) ?(quality=11) ?(lgwin=22) ?(lgblock=0) s =
-    (* Turn the bytes string into bigarray, then compress big array
-       into memory, turn big array back into bytes string *)
-    bytes_to_barray s |> pack_data_to_bigarray |> barray_to_bytes |> return
+    bytes_to_barray s
+    |> pack_data_to_bigarray
+    |> barray_to_bytes
+    |> return
+    |> try_it
 
 end

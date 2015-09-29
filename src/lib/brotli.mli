@@ -10,6 +10,9 @@ val bytes_to_barray : bytes ->
 
 module Decompress : sig
 
+  (** Raised when there was a failure in decompressing the data *)
+  type exn += Decompression_failure of string
+
   (** Decompresses a file given at file_src and store at destination,
       if no destination given then store at given file origin name
       just without an extension of the original file
@@ -25,6 +28,13 @@ module Decompress : sig
 end
 
 module Compress : sig
+
+  (** Raised when compression could not occur *)
+  type exn += Compression_failure of string
+
+  (** Raised when one of the compression parameters is not in an
+      appropriate range *)
+  type exn += Compression_param_invalid of string
 
   type mode =
     | Generic (** Compression is not aware of any special features of input *)

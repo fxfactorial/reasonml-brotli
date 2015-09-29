@@ -29,7 +29,7 @@ Executable brozip
   install: true
   MainIs: main.ml
   CompiledObject: native
-  BuildDepends: cmdliner, brotli, lwt.unix
+  BuildDepends: cmdliner, brotli, lwt.unix, lwt.ppx
 
 Library brotli
   Path: src/lib
@@ -37,13 +37,13 @@ Library brotli
   install: true
   CClib: -lbrotli -lstdc++
   CCOpt: -g -Wall -std=c++11 -x c++
-  NativeOpt: -cc clang
-  ByteOpt: -cc clang
+  NativeOpt: -cc g++
+  ByteOpt: -cc g++
   Modules: Brotli
   # InternalModules: 
   CompiledObject: best
   CSources: brotli_stubs.c
-  BuildDepends: lwt.unix
+  BuildDepends: lwt.unix, lwt.ppx
 
 Document api
   Title: API reference for brotli
