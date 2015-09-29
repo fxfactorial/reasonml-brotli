@@ -109,13 +109,21 @@ extern "C" {
     long dims[0];
     dims[0] = output.size();
 
-    if (ok) {
+    switch (ok) {
+    case 1: {
       as_bigarray = caml_ba_alloc(CAML_BA_UINT8 | CAML_BA_C_LAYOUT,
 				  1,
 				  output.data(),
 				  dims);
       CAMLreturn(as_bigarray);
-    } else {
+    }
+    case 0:
+      caml_failwith("Decoding error, e.g. corrupt input or no memory");
+    case 2:
+      caml_failwith("Partially done, but must be called again with more input");
+    case 3:
+      caml_failwith("Partially done, but must be called again with more output");
+    default:
       caml_failwith("Decompression Error");
     }
   }
