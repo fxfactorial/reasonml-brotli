@@ -8,9 +8,12 @@ val barray_to_bytes : (char, 'a, 'b) Bigarray.Array1.t -> bytes
 val bytes_to_barray : bytes ->
   (char, Bigarray.int8_unsigned_elt, Bigarray.c_layout) Bigarray.Array1.t
 
+(** Provides functions for decompressing Brotli algorithm compressed
+    files, functions may raise the Decompression_failure exception *)
 module Decompress : sig
 
-  (** Raised when there was a failure in decompressing the data *)
+  (** Raised when there was a failure in decompressing the data, read
+      the message provided. *)
   type exn += Decompression_failure of string
 
   (** Decompresses a file given at file_src and store at destination,
@@ -27,6 +30,9 @@ module Decompress : sig
 
 end
 
+(** Provides functions for compression using the Brotli algorithm with
+    adjustable parameters, defaults are what Google uses. Be aware
+    that compression may raise the Compression_failure exception *)
 module Compress : sig
 
   (** Raised when compression could not occur *)
