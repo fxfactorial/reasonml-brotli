@@ -59,39 +59,80 @@ module Decompress = struct
 
   let to_path ?file_dst ~file_src =
     let do_inflate p =
-        barray_of_path file_src >|= unpack_data_to_path p |> try_it
+      barray_of_path file_src >|= unpack_data_to_path p |> try_it
     in
     match file_dst with
     | Some p -> do_inflate p
     | None -> do_inflate (Filename.chop_extension file_src)
 
   let to_mem file_src =
-      barray_of_path file_src >|= unpack_data_to_bigarray |> try_it
+    barray_of_path file_src >|= unpack_data_to_bigarray |> try_it
 
 end
 
 module Compress = struct
+
+
+  type exn += Compression_failure of string
+  type exn += Compression_param_invalid of string
 
   type mode =
     | Generic (** Compression is not aware of any special features of input *)
     | Text    (** Compression knows that input is UTF-8 *)
     | Font    (** Compression knows that input is WOFF 2.0 *)
 
-  type exn += Compression_failure of string
-  type exn += Compression_param_invalid of string
+  type params = {mode : mode;
+                 quality : int;
+                 lgwin : int;
+                 lgblock : int; }
 
-  (* let validate_parameters q lgwin lgblock = *)
+  type quality = [`_0 | `_1 | `_2 | `_3 | `_4 | `_5 |
+                  `_6 | `_7 | `_8 | `_9 | `_10 | `_11]
+
+  type lgwin = [`_10 | `_11 | `_12 | `_13 | `_14
+               | `_15 | `_16 | `_17 | `_18 | `_19
+               | `_20 | `_21 | `_22 | `_23 | `_24]
+
+  type lgblock = [`_0 | `_16 | `_17 | `_18 | `_19
+                 | `_20 | `_21 | `_22 | `_23 | `_24]
+
+  let int_of_quality (x : quality) = match x with
+    | `_0 -> 0 | `_1 -> 1 | `_2 -> 2 | `_3 -> 3 | `_4 -> 4 | `_5 -> 5
+    | `_6 -> 6 | `_7 -> 7 | `_8 -> 8 | `_9 -> 9 | `_10 -> 10 | `_11 -> 11
+
+  let int_of_lgwin (x : lgwin) = match x with
+    | `_10 -> 10 | `_11 -> 11 | `_12 -> 12 | `_13 -> 13 | `_14 -> 14
+    | `_15 -> 15 | `_16 -> 16 | `_17 -> 17 | `_18 -> 18 | `_19 -> 19
+    | `_20 -> 20 | `_21 -> 21 | `_22 -> 22 | `_23 -> 23 | `_24 -> 24
+
+  let int_of_lgblock (x : lgblock) = match x with
+    | `_0 | `_16 -> 16 | `_17 -> 17 | `_18 -> 18 | `_19 -> 19
+    | `_20 -> 20 | `_21 -> 21 | `_22 -> 22 | `_23 -> 23 | `_24 -> 24
 
   let try_it = function
     | t -> try%lwt t with | Failure s -> raise (Compression_failure s)
 
-  let to_mem file_src =
+  let to_mem
+      ?(mode=Generic)
+      ?(quality : quality = `_11)
+      ?(lgwin : lgwin = `_22)
+      ?(lgblock : lgblock = `_0)
+      file_src =
     barray_of_path file_src >|= pack_data_to_bigarray |> try_it
 
-  let to_path ~file_src ~file_dst =
+  let to_path
+      ?(mode=Generic)
+      ?(quality : quality = `_11)
+      ?(lgwin : lgwin = `_22)
+      ?(lgblock : lgblock = `_0)
+      ~file_src ~file_dst =
     barray_of_path file_src >|= (pack_data_to_path file_dst) |> try_it
 
-  let to_bytes ?(mode=Generic) ?(quality=11) ?(lgwin=22) ?(lgblock=0) s =
+  let to_bytes
+      ?(mode=Generic)
+      ?(quality : quality = `_11)
+      ?(lgwin : lgwin = `_22)
+      ?(lgblock : lgblock = `_0) s =
     bytes_to_barray s
     |> pack_data_to_bigarray
     |> barray_to_bytes
