@@ -105,9 +105,11 @@ extern "C" {
     }
   }
 
-  CAMLprim value brotli_ml_compress_path(value file_dest, value this_barray)
+  CAMLprim value brotli_ml_compress_path(value file_dest,
+					 value ml_params,
+					 value this_barray)
   {
-    CAMLparam2(file_dest, this_barray);
+    CAMLparam3(file_dest, ml_params, this_barray);
 
     char *save_path = caml_strdup(String_val(file_dest));
     int ok;
@@ -145,9 +147,10 @@ extern "C" {
     }
   }
 
-  CAMLprim value brotli_ml_compress_in_mem(value this_barray)
+  CAMLprim value brotli_ml_compress_in_mem(value ml_params,
+					   value this_barray)
   {
-    CAMLparam1(this_barray);
+    CAMLparam2(ml_params, this_barray);
     CAMLlocal1(as_bigarray);
     int ok;
 

@@ -33,11 +33,13 @@ external unpack_data_to_bigarray :
 
 external pack_data_to_path :
   string ->
+  params ->
   ('char, 'int8_unsigned_elt, 'layout) Bigarray.Array1.t ->
   unit
   = "brotli_ml_compress_path"
 
 external pack_data_to_bigarray :
+  params ->
   ('char, 'int8_unsigned_elt, 'layout) Bigarray.Array1.t ->
   ('char, 'int8_unsigned_elt, 'layout) Bigarray.Array1.t
   = "brotli_ml_compress_in_mem"
@@ -143,7 +145,9 @@ module Compress = struct
       ?(lgwin : lgwin = `_22)
       ?(lgblock : lgblock = `_0)
       file_src =
-    barray_of_path file_src >|= pack_data_to_bigarray |> try_it
+    barray_of_path file_src
+    >|= pack_data_to_bigarray (make_params mode quality lgwin lgblock)
+    |> try_it
 
   let to_path
       ?(mode=Generic)
@@ -151,7 +155,9 @@ module Compress = struct
       ?(lgwin : lgwin = `_22)
       ?(lgblock : lgblock = `_0)
       ~file_src ~file_dst =
-    barray_of_path file_src >|= (pack_data_to_path file_dst) |> try_it
+    barray_of_path file_src
+    >|= (pack_data_to_path file_dst (make_params mode quality lgwin lgblock))
+    |> try_it
 
   let to_bytes
       ?(mode=Generic)
@@ -159,7 +165,7 @@ module Compress = struct
       ?(lgwin : lgwin = `_22)
       ?(lgblock : lgblock = `_0) s =
     bytes_to_barray s
-    |> pack_data_to_bigarray
+    |> pack_data_to_bigarray (make_params mode quality lgwin lgblock)
     |> barray_to_bytes
     |> return
     |> try_it
