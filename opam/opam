@@ -1,6 +1,6 @@
 opam-version: "1.2"
 name: "brotli"
-version: "0.1"
+version: "1.0"
 maintainer: "Edgar Aroutiounian <edgar.factorial@gmail.com>"
 authors: [ "Edgar Aroutiounian <edgar.factorial@gmail.com>" ]
 license: "BSD-3-clause"
@@ -9,24 +9,21 @@ bug-reports: "https://github.com/fxfactorial/ocaml-brotli/issues"
 dev-repo: "https://github.com/fxfactorial/ocaml-brotli.git"
 tags: [ "clib:stdc" "clib:brotli"  ]
 build: [
-  ["oasis" "setup"]
   ["ocaml" "setup.ml" "-configure" "--prefix" prefix]
   ["ocaml" "setup.ml" "-build"]
 ]
 install: ["ocaml" "setup.ml" "-install"]
 remove: [
-  ["ocaml" "%{etc}%/brotli/_oasis_remove_.ml" "%{etc}%/brotli"]
+  ["ocamlfind" "remove" "brotli"]
 ]
 build-test: [
-  ["oasis" "setup"]
   ["ocaml" "setup.ml" "-configure" "--enable-tests"]
   ["ocaml" "setup.ml" "-build"]
   ["ocaml" "setup.ml" "-test"]
 ]
+build-doc: [ "ocaml" "setup.ml" "-doc" ]
 depends: [
-  "cmdliner" {build}
-  "lwt" {build}
-  "oasis" {build & >= "0.4"}
+  "lwt"
   "ocamlfind" {build}
 ]
 available: [ ocaml-version >= "4.02.3" ]

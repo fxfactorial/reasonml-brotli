@@ -1,5 +1,5 @@
 # OASIS_START
-# DO NOT EDIT (digest: 627489ee33c8230a3ddfe64b9050da2f)
+# DO NOT EDIT (digest: 3e30318c55a74fa6c8ad09efad288668)
 # Ignore VCS directories, you can use the same kind of rule outside
 # OASIS_START/STOP if you want to exclude directories that contains
 # useless stuff for the build process
@@ -15,34 +15,25 @@ true: annot, bin_annot
 "_darcs": -traverse
 "_darcs": not_hygienic
 # Library brotli
-"src/lib/brotli.cmxs": use_brotli
-<src/lib/*.ml{,i,y}>: oasis_library_brotli_ccopt
-"src/lib/brotli_stubs.c": oasis_library_brotli_ccopt
-<src/lib/brotli.{cma,cmxa}>: oasis_library_brotli_cclib
-"src/lib/libbrotli_stubs.lib": oasis_library_brotli_cclib
-"src/lib/dllbrotli_stubs.dll": oasis_library_brotli_cclib
-"src/lib/libbrotli_stubs.a": oasis_library_brotli_cclib
-"src/lib/dllbrotli_stubs.so": oasis_library_brotli_cclib
-<src/lib/brotli.{cma,cmxa}>: oasis_library_brotli_byte
-<src/lib/*.ml{,i,y}>: oasis_library_brotli_byte
-"src/lib/brotli_stubs.c": oasis_library_brotli_byte
-<src/lib/brotli.{cma,cmxa}>: oasis_library_brotli_native
-<src/lib/*.ml{,i,y}>: oasis_library_brotli_native
-"src/lib/brotli_stubs.c": oasis_library_brotli_native
-<src/lib/brotli.{cma,cmxa}>: use_libbrotli_stubs
-<src/lib/*.ml{,i,y}>: package(lwt.ppx)
-<src/lib/*.ml{,i,y}>: package(lwt.unix)
-"src/lib/brotli_stubs.c": package(lwt.ppx)
-"src/lib/brotli_stubs.c": package(lwt.unix)
-# Executable brozip
-"src/app/main.native": package(cmdliner)
-"src/app/main.native": package(lwt.ppx)
-"src/app/main.native": package(lwt.unix)
-"src/app/main.native": use_brotli
-<src/app/*.ml{,i,y}>: package(cmdliner)
-<src/app/*.ml{,i,y}>: package(lwt.ppx)
-<src/app/*.ml{,i,y}>: package(lwt.unix)
-<src/app/*.ml{,i,y}>: use_brotli
+"src/brotli.cmxs": use_brotli
+<src/*.ml{,i,y}>: oasis_library_brotli_ccopt
+"src/brotli_stubs.c": oasis_library_brotli_ccopt
+<src/brotli.{cma,cmxa}>: oasis_library_brotli_cclib
+"src/libbrotli_stubs.lib": oasis_library_brotli_cclib
+"src/dllbrotli_stubs.dll": oasis_library_brotli_cclib
+"src/libbrotli_stubs.a": oasis_library_brotli_cclib
+"src/dllbrotli_stubs.so": oasis_library_brotli_cclib
+<src/brotli.{cma,cmxa}>: oasis_library_brotli_byte
+<src/*.ml{,i,y}>: oasis_library_brotli_byte
+"src/brotli_stubs.c": oasis_library_brotli_byte
+<src/brotli.{cma,cmxa}>: oasis_library_brotli_native
+<src/*.ml{,i,y}>: oasis_library_brotli_native
+"src/brotli_stubs.c": oasis_library_brotli_native
+<src/brotli.{cma,cmxa}>: use_libbrotli_stubs
+<src/*.ml{,i,y}>: package(lwt.ppx)
+<src/*.ml{,i,y}>: package(lwt.unix)
+"src/brotli_stubs.c": package(lwt.ppx)
+"src/brotli_stubs.c": package(lwt.unix)
 # OASIS_STOP
 "libbrotli": -traverse
 "libbrotli": not_hygienic
