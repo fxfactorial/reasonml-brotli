@@ -56,7 +56,8 @@ extern "C" {
     ok = BrotliDecompress(in, out);
     caml_leave_blocking_section();
 
-    if (ok) {
+    switch (ok) {
+    case 1: {
       std::ofstream output_file(save_path);
       free(save_path);
       std::ofstream FILE(save_path, std::ofstream::binary);
@@ -64,9 +65,23 @@ extern "C" {
 		output.end(),
 		std::ostreambuf_iterator<char>(FILE));
       CAMLreturn(Val_unit);
-    } else {
+    }
+    case 0: {
+      free(save_path);
+      caml_failwith("Decoding error, e.g. corrupt input or no memory");
+    }
+    case 2: {
+      free(save_path);
+      caml_failwith("Partially done, but must be called again with more input");
+    }
+    case 3: {
+      free(save_path);
+      caml_failwith("Partially done, but must be called again with more output");
+    }
+    default: {
       free(save_path);
       caml_failwith("Decompression Error");
+    }
     }
   }
 
