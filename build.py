@@ -3,10 +3,11 @@
 import subprocess
 import os
 import sys
+import pdb
 
 def build_dependencies_and_install():
-    opam_result = subprocess.call(["opam", "install", "oasis",
-                                   "lwt", "ocamlfind"])
+    # opam_result = subprocess.call(["opam", "install", "oasis",
+    #                                "lwt", "ocamlfind"])
     brotli_result = subprocess.call(["git", "clone",
                                      "https://github.com/google/brotli/"])
     libbrotli_result = subprocess.call(["git", "clone",
