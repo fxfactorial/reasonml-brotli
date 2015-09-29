@@ -9,6 +9,7 @@ bug-reports: "https://github.com/fxfactorial/ocaml-brotli/issues"
 dev-repo: "https://github.com/fxfactorial/ocaml-brotli.git"
 tags: [ "clib:stdc" "clib:brotli"  ]
 build: [
+  ["oasis" "setup"]
   ["ocaml" "setup.ml" "-configure" "--prefix" prefix]
   ["ocaml" "setup.ml" "-build"]
 ]
@@ -23,6 +24,7 @@ build-test: [
 ]
 build-doc: [ "ocaml" "setup.ml" "-doc" ]
 depends: [
+  "oasis"
   "lwt"
   "ocamlfind" {build}
 ]
