@@ -32,10 +32,6 @@ module Compress : sig
   (** Raised when compression could not occur *)
   type exn += Compression_failure of string
 
-  (** Raised when one of the compression parameters is not in an
-      appropriate range *)
-  type exn += Compression_param_invalid of string
-
   type mode =
     | Generic (** Compression is not aware of any special features of input *)
     | Text    (** Compression knows that input is UTF-8 *)
