@@ -61,14 +61,14 @@ module Compress : sig
                  | `_20 | `_21 | `_22 | `_23 | `_24]
 
   (** Compress a file given at file_src and write the compressed file
-      to file_dst *)
+      to second argument path *)
   val to_path :
     ?mode:mode ->
     ?quality:quality ->
     ?lgwin:lgwin ->
     ?lgblock:lgblock ->
     file_src:string ->
-    file_dst:string ->
+    string ->
     unit Lwt.t
 
   (** Compress a file and give back in memory the compressed contents

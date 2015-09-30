@@ -153,7 +153,8 @@ module Compress = struct
       ?(quality : quality = `_11)
       ?(lgwin : lgwin = `_22)
       ?(lgblock : lgblock = `_0)
-      ~file_src ~file_dst =
+      ~file_src
+      file_dst =
     barray_of_path file_src
     >|= (pack_data_to_path file_dst (make_params mode quality lgwin lgblock))
     |> try_it
@@ -162,7 +163,8 @@ module Compress = struct
       ?(mode=Generic)
       ?(quality : quality = `_11)
       ?(lgwin : lgwin = `_22)
-      ?(lgblock : lgblock = `_0) s =
+      ?(lgblock : lgblock = `_0)
+      s =
     bytes_to_barray s
     |> pack_data_to_bigarray (make_params mode quality lgwin lgblock)
     |> barray_to_bytes
