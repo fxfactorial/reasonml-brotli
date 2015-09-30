@@ -30,9 +30,6 @@ you can override to your preferences.
 
 # Issues
 
-1.  This is a big one. Decompressing to a path isn't writing to the
-    file correctly on Linux, noticed on Debian Jessie, although its
-    fine on `OS X`.
-2.  I suck at `C++` so its maybe not the most idiomatic but it works.
-3.  Some low hanging fruit available for refactoring, leaving it for a
+1.  I suck at `C++` so its maybe not the most idiomatic but it works.
+2.  Some low hanging fruit available for refactoring, leaving it for a
     pull request for a developer eager to get into open-source.
