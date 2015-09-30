@@ -20,14 +20,17 @@ module Decompress : sig
       destination given then store at given file origin name just
       without an extension of the original file
       name. i.e. foo.compressed becomes foo *)
-  val to_path : ?file_dst:string -> string -> unit Lwt.t
+  val to_path : ?file_dst:bytes -> bytes -> unit Lwt.t
 
   (** Decompress a file at filepath and give back in memory the
       decompressed contents as a Bigarray *)
   val to_mem :
-    string ->
+    bytes ->
     (char, Bigarray.int8_unsigned_elt, Bigarray.c_layout) Bigarray.Array1.t Lwt.t
 
+  (** Decompress compressed bytes string *)
+  val to_bytes :
+    bytes -> bytes Lwt.t
 end
 
 (** Provides functions for compression using the Brotli algorithm with

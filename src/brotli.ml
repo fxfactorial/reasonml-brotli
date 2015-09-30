@@ -90,6 +90,13 @@ module Decompress = struct
   let to_mem file_src =
     barray_of_path file_src >|= unpack_data_to_bigarray |> try_it
 
+  let to_bytes s =
+    bytes_to_barray s
+    |> return
+    >|= unpack_data_to_bigarray
+    >|= barray_to_bytes
+    |> try_it
+
 end
 
 module Compress = struct
