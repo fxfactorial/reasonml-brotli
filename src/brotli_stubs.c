@@ -59,11 +59,12 @@ extern "C" {
     switch (ok) {
     case 1: {
       std::ofstream output_file(save_path);
-      free(save_path);
       std::ofstream FILE(save_path, std::ofstream::binary);
       std::copy(output.begin(),
 		output.end(),
 		std::ostreambuf_iterator<char>(FILE));
+      free(save_path);
+      FILE.close();
       CAMLreturn(Val_unit);
     }
     case 0: {
@@ -156,15 +157,16 @@ extern "C" {
 
     if (ok) {
       std::ofstream output_file(save_path);
-      free(save_path);
       std::ofstream FILE(save_path, std::ofstream::binary);
       std::copy(output,
       		output + output_length,
       		std::ostreambuf_iterator<char>(FILE));
       delete[] output;
+      free(save_path);
       CAMLreturn(Val_unit);
     } else {
       delete[] output;
+      free(save_path);
       caml_failwith("Compression Error");
     }
   }
