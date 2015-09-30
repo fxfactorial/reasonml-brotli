@@ -58,8 +58,7 @@ extern "C" {
 
     switch (ok) {
     case 1: {
-      std::ofstream output_file(save_path);
-      std::ofstream FILE(save_path, std::ofstream::binary);
+      std::ofstream FILE(save_path, std::ofstream::binary | std::ofstream::out);
       std::copy(output.begin(),
 		output.end(),
 		std::ostreambuf_iterator<char>(FILE));
@@ -156,11 +155,11 @@ extern "C" {
     caml_leave_blocking_section();
 
     if (ok) {
-      std::ofstream output_file(save_path);
-      std::ofstream FILE(save_path, std::ofstream::binary);
+      std::ofstream FILE(save_path, std::ofstream::binary | std::ofstream::out);
       std::copy(output,
       		output + output_length,
       		std::ostreambuf_iterator<char>(FILE));
+      FILE.close();
       delete[] output;
       free(save_path);
       CAMLreturn(Val_unit);
