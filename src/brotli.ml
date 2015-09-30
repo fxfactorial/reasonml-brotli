@@ -79,7 +79,7 @@ module Decompress = struct
   let try_it = function
     | t -> try%lwt t with Failure s -> raise (Decompression_failure s)
 
-  let to_path ?file_dst ~file_src =
+  let to_path ?file_dst file_src =
     let do_inflate p =
       barray_of_path file_src >|= unpack_data_to_path p |> try_it
     in

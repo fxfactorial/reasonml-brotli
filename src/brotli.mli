@@ -16,11 +16,11 @@ module Decompress : sig
       the message provided. *)
   type exn += Decompression_failure of string
 
-  (** Decompresses a file given at file_src and store at destination,
-      if no destination given then store at given file origin name
-      just without an extension of the original file
+  (** Decompresses a file given path and store at destination, if no
+      destination given then store at given file origin name just
+      without an extension of the original file
       name. i.e. foo.compressed becomes foo *)
-  val to_path : ?file_dst:string -> file_src:string -> unit Lwt.t
+  val to_path : ?file_dst:string -> string -> unit Lwt.t
 
   (** Decompress a file at filepath and give back in memory the
       decompressed contents as a Bigarray *)
