@@ -26,8 +26,8 @@ Library brotli
   Path: src
   BuildTools:ocamlbuild
   install: true
-  CClib: -lbrotli -lstdc++
-  CCOpt: -g -Wall -std=c++11 -x c++
+  CClib: -L/usr/local/lib -lbrotli -lstdc++
+  CCOpt: -g -Wall -std=c++11 -x c++ -I/usr/local/include 
   NativeOpt: -cc g++
   ByteOpt: -cc g++
   Modules: Brotli
