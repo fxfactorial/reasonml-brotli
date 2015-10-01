@@ -1,24 +1,25 @@
-These are OCaml bindings to the new compression library released by
-Google called [brotli](https://github.com/google/brotli), uses `Bigarrays` for memory efficiency and `Lwt`
-for concurrency.
+These are OCaml bindings to the compression algorithm/code released by
+Google called [Brotli](https://github.com/google/brotli).
+
+This library uses `Bigarrays` for memory efficiency and `Lwt` for
+concurrency.
 
 # Installation
 
-I assume that you have [opam](https://opam.ocaml.org) installed, it is OCaml's package manager.
-All you have to do, until I get this up on `opam` is:
+I assume that you have [opam](https://opam.ocaml.org) installed, it is OCaml's package manager. 
 
 ```shell
-$ opam pin add brotli .
+$ opam install brotli
 ```
 
-and you'll have the `Brotli` module to use.
+# Library usage
 
-# Brotli Library usage
-
-The `Brotli` module contains helper functions and two submodules
-called `Compress` and `Decompress`. Both are straightforward and are
-well commented, look at the `mli` or you can look at this animation
-which goes over the public API
+After compiling and installing you'll have one top level module called
+`Brotli` available. This module contains two helper functions for
+converting `Bytes` strings to `Bigarray~s and vice-verse. More
+interesting are the two submodules ~Decompress` and `Compress`. You
+can look at the well commented `mli` or you can look at this animation
+which goes over the public API.
 
 ![img](./brotli_docs.gif)
 
@@ -30,6 +31,8 @@ you can override to your preferences.
 
 # Issues
 
-1.  I suck at `C++` so its maybe not the most idiomatic but it works.
-2.  Some low hanging fruit available for refactoring, leaving it for a
-    pull request for a developer eager to get into open-source.
+PRs and code reviews are always welcome and appreciated.
+
+1.  I suck at `C++` so its maybe not the most idiomatic `C++` but it
+    works.
+2.  The build system relies on a `python` script, I wish it didn't.
