@@ -56,6 +56,8 @@ extern "C" {
     ok = BrotliDecompress(in, out);
     caml_leave_blocking_section();
 
+    raw_data = NULL;
+
     switch (ok) {
     case 1: {
       std::ofstream FILE(save_path, std::ofstream::binary | std::ofstream::out);
@@ -109,6 +111,7 @@ extern "C" {
     long dims[0];
     dims[0] = output.size();
 
+    raw_data = NULL;
     switch (ok) {
     case 1: {
       as_bigarray = caml_ba_alloc(CAML_BA_UINT8 | CAML_BA_C_LAYOUT,
@@ -149,11 +152,16 @@ extern "C" {
     params.lgwin = Int_val(Field(ml_params, 2));
     params.lgblock = Int_val(Field(ml_params, 3));
 
+    BrotliMemIn *n = new BrotliMemIn(input, length);
+    BrotliMemOut *o = new BrotliMemOut(output, output_length);
+
     caml_enter_blocking_section();
-    ok = BrotliCompressBuffer(params, length, input,
-    			      &output_length, output);
+    ok = BrotliCompress(params, n, o);
     caml_leave_blocking_section();
 
+    delete n;
+    delete o;
+    input = NULL;
     if (ok) {
       std::ofstream FILE(save_path, std::ofstream::binary | std::ofstream::out);
       std::copy(output,
@@ -188,10 +196,16 @@ extern "C" {
     params.lgwin = Int_val(Field(ml_params, 2));
     params.lgblock = Int_val(Field(ml_params, 3));
 
+    BrotliMemIn *n = new BrotliMemIn(input, length);
+    BrotliMemOut *o = new BrotliMemOut(output, output_length);
+
     caml_enter_blocking_section();
-    ok = BrotliCompressBuffer(params, length, input,
-    			      &output_length, output);
+    ok = BrotliCompress(params, n, o);
     caml_leave_blocking_section();
+
+    delete n;
+    delete o;
+    input = NULL;
 
     long dims[0];
     dims[0] = output_length;
