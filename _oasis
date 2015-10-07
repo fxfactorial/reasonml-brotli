@@ -19,6 +19,7 @@ PostBuildCommand:
 Description:
   OCaml Bindings to brotli, Google's new compression algorithm
 
+  Uses Bigarrays for memory efficiency and ready for Lwt concurrency
   Source: https://github.com/google/brotli/
   RFC: http://www.ietf.org/id/draft-alakuijala-brotli
 
@@ -26,7 +27,7 @@ Library brotli
   Path: src
   BuildTools:ocamlbuild
   install: true
-  CClib: -L/usr/local/lib -lbrotli -lstdc++
+  CClib: -L/usr/local/lib -lbrotlidec -lbrotlienc -lstdc++
   CCOpt: -g -Wall -std=c++11 -x c++ -I/usr/local/include 
   NativeOpt: -cc g++
   ByteOpt: -cc g++

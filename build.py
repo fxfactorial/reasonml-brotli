@@ -5,24 +5,12 @@ import os
 import sys
 
 def build_dependencies_and_install():
-    brotli_result = subprocess.call(["git", "clone",
-                                     "https://github.com/google/brotli/"])
     libbrotli_result = subprocess.call(["git", "clone",
-                                        "https://github.com/fxfactorial/libbrotli"])
-    mv_result = subprocess.call(["mv", "brotli", "libbrotli"])
+                                        "https://github.com/bagder/libbrotli"])
     os.chdir("libbrotli")
-    for command in ["libtoolize", "aclocal", "autoheader", "autoconf",
-                    "automake", "./configure", "make"]:
-        if command == "libtoolize" and sys.platform == "darwin":
-            libtool_result = subprocess.call(["glibtoolize"])
-        else:
-            if command == "automake":
-                process_result = subprocess.call([command,
-                                                  "--add-missing"])
-            if command == "make":
-                process_result = subprocess.call([command, "install"])
-            else:
-                process_result = subprocess.call([command])
+    subprocess.call(["bash", "autogen.sh"])
+    subprocess.call(["bash", "configure"])
+    subprocess.call(["make"])
 
 def clean_up():
     rm_result = subprocess.call(["rm", "-rf", "libbrotli"])
