@@ -11,10 +11,7 @@ Plugins:      META (0.4), DevFiles (0.4)
 AlphaFeatures: ocamlbuild_more_args
 
 PreBuildCommand:
-  python build.py --prepare
-
-PostBuildCommand:
-  python build.py --cleanup
+  sh prepare.sh
 
 Description:
   OCaml Bindings to brotli, Google's new compression algorithm
