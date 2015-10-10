@@ -35,4 +35,3 @@ PRs and code reviews are always welcome and appreciated.
 
 1.  I suck at `C++` so its maybe not the most idiomatic `C++` but it
     works.
-2.  The build system relies on a `python` script, I wish it didn't.
