@@ -64,24 +64,24 @@ extern "C" {
       std::copy(output.begin(),
 		output.end(),
 		std::ostreambuf_iterator<char>(FILE));
-      free(save_path);
+      caml_stat_free(save_path);
       FILE.close();
       CAMLreturn(Val_unit);
     }
     case 0: {
-      free(save_path);
+      caml_stat_free(save_path);
       caml_failwith("Decoding error, e.g. corrupt input or no memory");
     }
     case 2: {
-      free(save_path);
+      caml_stat_free(save_path);
       caml_failwith("Partially done, but must be called again with more input");
     }
     case 3: {
-      free(save_path);
+      caml_stat_free(save_path);
       caml_failwith("Partially done, but must be called again with more output");
     }
     default: {
-      free(save_path);
+      caml_stat_free(save_path);
       caml_failwith("Decompression Error");
     }
     }
@@ -169,11 +169,11 @@ extern "C" {
       		std::ostreambuf_iterator<char>(FILE));
       FILE.close();
       delete[] output;
-      free(save_path);
+      caml_stat_free(save_path);
       CAMLreturn(Val_unit);
     } else {
       delete[] output;
-      free(save_path);
+      caml_stat_free(save_path);
       caml_failwith("Compression Error");
     }
   }
