@@ -46,8 +46,11 @@ build-doc: [ "ocaml" "setup.ml" "-doc" ]
 depexts: [
   [["ubuntu"] ["clang" "libc++-dev"]]
   [["debian"] ["clang" "libc++-dev"]]
-  [["source" "osx" "linux"]
+  [["source" "osx"]
    ["https://raw.githubusercontent.com/fxfactorial/ocaml-brotli/master/prepare.sh"]]
+  [["source" "linux"]
+   ["https://raw.githubusercontent.com/fxfactorial/ocaml-brotli/master/prepare.sh"]]
+
  ]
 depends: [
   "oasis" {build}
