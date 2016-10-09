@@ -1,12 +1,15 @@
 (** OCaml bindings to the Brotli compression library, uses Bigarrays
     for performance *)
 
+(** Alias for the Bigarray layout of compression input/output *)
+type data =
+  (char, Bigarray.int8_unsigned_elt, Bigarray.c_layout) Bigarray.Array1.t
+
 (** Create a bytes string from a Bigarray *)
-val barray_to_bytes : (char, 'a, 'b) Bigarray.Array1.t -> bytes
+val to_bytes : data -> bytes
 
 (** Create a Bigarray out from a bytes string *)
-val bytes_to_barray : bytes ->
-  (char, Bigarray.int8_unsigned_elt, Bigarray.c_layout) Bigarray.Array1.t
+val to_bigarray : bytes -> data
 
 (** Provides functions for decompressing Brotli algorithm compressed
     files, functions may raise the Decompression_failure exception *)
@@ -20,17 +23,17 @@ module Decompress : sig
       destination given then store at given file origin name just
       without an extension of the original file
       name. i.e. foo.compressed becomes foo *)
-  val to_path : ?file_dst:bytes -> bytes -> unit Lwt.t
+  (* val to_path : ?file_dst:bytes -> bytes -> unit Lwt.t *)
 
   (** Decompress a file at filepath and give back in memory the
       decompressed contents as a Bigarray *)
-  val to_mem :
-    bytes ->
-    (char, Bigarray.int8_unsigned_elt, Bigarray.c_layout) Bigarray.Array1.t Lwt.t
+  (* val to_mem : *)
+  (*   bytes -> *)
+  (*   (char, Bigarray.int8_unsigned_elt, Bigarray.c_layout) Bigarray.Array1.t Lwt.t *)
 
   (** Decompress compressed bytes string *)
-  val to_bytes :
-    bytes -> bytes Lwt.t
+  val to_bytes : ?custom_dictionary:data -> bytes -> bytes
+
 end
 
 (** Provides functions for compression using the Brotli algorithm with
@@ -65,24 +68,33 @@ module Compress : sig
 
   (** Compress a file given at file_src and write the compressed file
       to second argument path *)
-  val to_path :
+  (* val to_path : *)
+  (*   ?mode:mode -> *)
+  (*   ?quality:quality -> *)
+  (*   ?lgwin:lgwin -> *)
+  (*   ?lgblock:lgblock -> *)
+  (*   file_src:string -> *)
+  (*   string -> unit *)
+
+  val of_bytes:
     ?mode:mode ->
     ?quality:quality ->
     ?lgwin:lgwin ->
     ?lgblock:lgblock ->
-    file_src:string ->
-    string ->
-    unit Lwt.t
+    ?custom_dictionary:data ->
+    bytes
+    -> data
 
   (** Compress a file and give back in memory the compressed contents
       as a Bigarray *)
-  val to_mem:
+  val of_file:
     ?mode:mode ->
     ?quality:quality ->
     ?lgwin:lgwin ->
     ?lgblock:lgblock ->
+    ?custom_dictionary:data ->
     string ->
-    (char, Bigarray.int8_unsigned_elt, Bigarray.c_layout) Bigarray.Array1.t Lwt.t
+    data
 
   (** Compress the given bytes string to a compressed bytes string *)
   val to_bytes:
@@ -90,7 +102,7 @@ module Compress : sig
     ?quality:quality ->
     ?lgwin:lgwin ->
     ?lgblock:lgblock ->
-    bytes ->
-    bytes Lwt.t
+    ?custom_dictionary:data ->
+    bytes -> bytes
 
 end

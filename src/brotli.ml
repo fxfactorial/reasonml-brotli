@@ -1,14 +1,10 @@
-open Lwt
 
-type mode =
-  | Generic
-  | Text
-  | Font
+type data =
+  (char, Bigarray.int8_unsigned_elt, Bigarray.c_layout) Bigarray.Array1.t
 
-type params = {mode : int;
-               quality : int;
-               lgwin : int;
-               lgblock : int; }
+type mode = Generic | Text | Font
+
+type params = {mode : int; quality : int; lgwin : int; lgblock : int }
 
 type quality = [`_0 | `_1 | `_2 | `_3 | `_4 | `_5 |
                 `_6 | `_7 | `_8 | `_9 | `_10 | `_11]
@@ -20,82 +16,82 @@ type lgwin = [`_10 | `_11 | `_12 | `_13 | `_14
 type lgblock = [`_0 | `_16 | `_17 | `_18 | `_19
                | `_20 | `_21 | `_22 | `_23 | `_24]
 
-external unpack_data_to_path :
-  string ->
-  ('char, 'int8_unsigned_elt, 'layout) Bigarray.Array1.t ->
-  unit
-  = "brotli_ml_decompress_path"
+(* external unpack_data_to_path : *)
+(*   string -> *)
+(*   ('char, 'int8_unsigned_elt, 'layout) Bigarray.Array1.t -> *)
+(*   unit *)
+(*   = "brotli_ml_decompress_path" *)
 
 external unpack_data_to_bigarray :
-  ('char, 'int8_unsigned_elt, 'layout) Bigarray.Array1.t ->
-  ('char, 'int8_unsigned_elt, 'layout) Bigarray.Array1.t
-  = "brotli_ml_decompress_in_mem"
+  data option -> data -> data = "brotli_ml_decompress_in_mem"
 
-external pack_data_to_path :
-  string ->
-  params ->
-  ('char, 'int8_unsigned_elt, 'layout) Bigarray.Array1.t ->
-  unit
-  = "brotli_ml_compress_path"
+(* external pack_data_to_path : *)
+(*   string -> *)
+(*   params -> *)
+(*   ('char, 'int8_unsigned_elt, 'layout) Bigarray.Array1.t -> *)
+(*   unit *)
+(*   = "brotli_ml_compress_path" *)
 
 external pack_data_to_bigarray :
-  params ->
-  ('char, 'int8_unsigned_elt, 'layout) Bigarray.Array1.t ->
-  ('char, 'int8_unsigned_elt, 'layout) Bigarray.Array1.t
-  = "brotli_ml_compress_in_mem"
+  data option -> params -> data -> data = "brotli_ml_compress_in_mem"
 
-let barray_to_bytes barray =
-  let b_size = Bigarray.Array1.dim barray in
-  (* Any way to do this without having to make this string? *)
-  let as_bytes = Bytes.create b_size in
-  for i = 0 to b_size - 1 do
-    Bytes.set as_bytes i (Bigarray.Array1.unsafe_get barray i)
-  done;
-  as_bytes
+let to_bytes barray = Bigarray.(
+    let b_size = Array1.dim barray in
+    (* Any way to do this without having to make this string? *)
+    let as_bytes = Bytes.create b_size in
+    for i = 0 to b_size - 1 do Bytes.set as_bytes i (Array1.unsafe_get barray i)
+    done;
+    as_bytes
+  )
 
-let bytes_to_barray bytes =
-  let open Bigarray in
-  let b_array = Array1.create Char C_layout (String.length bytes) in
-  for i = 0 to Bytes.length bytes - 1 do
-    Array1.unsafe_set b_array i bytes.[i]
-  done;
-  b_array
+let to_bigarray bytes = Bigarray.(
+    let b_array = Array1.create Char C_layout (Bytes.length bytes) in
+    for i = 0 to Bytes.length bytes - 1 do Array1.unsafe_set b_array i bytes.[i]
+    done;
+    b_array
+  )
 
-let barray_of_path file_src =
-  let open Lwt_unix in
-  stat file_src >>= fun size ->
-  openfile file_src [O_RDONLY] 0o666 >>= fun fd ->
-  let this_bigarray =
-    let open Bigarray in
-    Array1.map_file (unix_file_descr fd) Char C_layout false size.st_size
-  in
-  close fd >|= fun () ->
-  this_bigarray
+let bigarray_of_path file_src = Unix.(
+    stat file_src |> fun stats ->
+    openfile file_src [O_RDONLY] 0o666 |> fun fd ->
+    let this_bigarray =
+      let open Bigarray in
+      Array1.map_file fd Char C_layout false stats.st_size
+    in
+    close fd;
+    this_bigarray
+  )
+
+  (* let open Lwt_unix in *)
+  (* stat file_src >>= fun size -> *)
+  (* openfile file_src [O_RDONLY] 0o666 >>= fun fd -> *)
+  (* let this_bigarray = *)
+  (*   let open Bigarray in *)
+  (*   Array1.map_file (unix_file_descr fd) Char C_layout false size.st_size *)
+  (* in *)
+  (* close fd >|= fun () -> *)
+  (* this_bigarray *)
 
 module Decompress = struct
 
   type exn += Decompression_failure of string
 
-  let try_it = function
-    | t -> try%lwt t with Failure s -> raise (Decompression_failure s)
+  (* let try_it = function *)
+  (*   | t -> try%lwt t with Failure s -> raise (Decompression_failure s) *)
 
-  let to_path ?file_dst file_src =
-    let do_inflate p =
-      barray_of_path file_src >|= unpack_data_to_path p |> try_it
-    in
-    match file_dst with
-    | Some p -> do_inflate p
-    | None -> do_inflate (Filename.chop_extension file_src)
+  (* let to_path ?file_dst file_src = *)
+  (*   bigarray_of_path file_src *)
+  (*   |> unpack_data_to_path *)
+  (*     (match file_dst with *)
+  (*      | Some p -> p *)
+  (*      | None -> (Filename.chop_extension file_src)) *)
 
-  let to_mem file_src =
-    barray_of_path file_src >|= unpack_data_to_bigarray |> try_it
 
-  let to_bytes s =
-    bytes_to_barray s
-    |> return
-    >|= unpack_data_to_bigarray
-    >|= barray_to_bytes
-    |> try_it
+  let to_mem file_src = ()
+    (* barray_of_path file_src >|= unpack_data_to_bigarray |> try_it *)
+
+  let to_bytes ?custom_dictionary s =
+    to_bigarray s |> unpack_data_to_bigarray custom_dictionary |> to_bytes
 
 end
 
@@ -142,40 +138,52 @@ module Compress = struct
       lgwin = int_of_lgwin lgw;
       lgblock = int_of_lgblock lgb; }
 
-  let try_it = function
-    | t -> try%lwt t with | Failure s -> raise (Compression_failure s)
+  (* let try_it = function *)
+  (*   | t -> try%lwt t with | Failure s -> raise (Compression_failure s) *)
 
-  let to_mem
+  let of_bytes
       ?(mode=Generic)
       ?(quality : quality = `_11)
       ?(lgwin : lgwin = `_22)
       ?(lgblock : lgblock = `_0)
+      ?custom_dictionary
+      byte_string =
+    pack_data_to_bigarray
+      custom_dictionary
+      (make_params mode quality lgwin lgblock)
+      (to_bigarray byte_string)
+
+  let of_file
+      ?(mode=Generic)
+      ?(quality : quality = `_11)
+      ?(lgwin : lgwin = `_22)
+      ?(lgblock : lgblock = `_0)
+      ?custom_dictionary
       file_src =
-    barray_of_path file_src
-    >|= pack_data_to_bigarray (make_params mode quality lgwin lgblock)
-    |> try_it
+    pack_data_to_bigarray
+      custom_dictionary
+      (make_params mode quality lgwin lgblock)
+      (bigarray_of_path file_src)
 
-  let to_path
-      ?(mode=Generic)
-      ?(quality : quality = `_11)
-      ?(lgwin : lgwin = `_22)
-      ?(lgblock : lgblock = `_0)
-      ~file_src
-      file_dst =
-    barray_of_path file_src
-    >|= (pack_data_to_path file_dst (make_params mode quality lgwin lgblock))
-    |> try_it
+  (* let to_path *)
+  (*     ?(mode=Generic) *)
+  (*     ?(quality : quality = `_11) *)
+  (*     ?(lgwin : lgwin = `_22) *)
+  (*     ?(lgblock : lgblock = `_0) *)
+  (*     ~file_src *)
+  (*     file_dst = *)
+  (*   bigarray_of_path file_src *)
+  (*   |> (pack_data_to_path file_dst (make_params mode quality lgwin lgblock)) *)
 
   let to_bytes
       ?(mode=Generic)
       ?(quality : quality = `_11)
       ?(lgwin : lgwin = `_22)
       ?(lgblock : lgblock = `_0)
+      ?custom_dictionary
       s =
-    bytes_to_barray s
-    |> pack_data_to_bigarray (make_params mode quality lgwin lgblock)
-    |> barray_to_bytes
-    |> return
-    |> try_it
+    to_bigarray s
+    |> pack_data_to_bigarray custom_dictionary (make_params mode quality lgwin lgblock)
+    |> to_bytes
 
 end

@@ -1,2 +1,2 @@
-B _build/src/lib
+B _build/src
 PKG brotli lwt lwt.ppx

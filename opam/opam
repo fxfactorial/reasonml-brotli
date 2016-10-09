@@ -1,6 +1,7 @@
+# -*- conf -*-
 opam-version: "1.2"
 name: "brotli"
-version: "1.1"
+version: "1.2.0"
 maintainer: "Edgar Aroutiounian <edgar.factorial@gmail.com>"
 authors: [ "Edgar Aroutiounian <edgar.factorial@gmail.com>" ]
 license: "BSD-3-clause"
@@ -23,9 +24,18 @@ build-test: [
   ["ocaml" "setup.ml" "-test"]
 ]
 build-doc: [ "ocaml" "setup.ml" "-doc" ]
+depexts: [
+  [["ubuntu"] ["clang" "libc++-dev"]]
+  [["debian"] ["clang" "libc++-dev"]]
+  [["source" "darwin" "linux"]
+   ["https://raw.githubusercontent.com/fxfactorial/ocaml-brotli/master/prepare.sh"]]
+ ]
 depends: [
-  "oasis"
   "lwt"
+  "base-basearray"
+  "oasis" {build}
+  "conf-autoconf" {build}
   "ocamlfind" {build}
+  "ocamlbuild" {build}
 ]
-available: [ ocaml-version >= "4.02.3" ]
+available: [ ocaml-version >= "4.03.0" ]
