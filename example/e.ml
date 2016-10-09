@@ -1,7 +1,5 @@
 
-
-let () =
-  let raw_data =
+let raw_data =
     {|
 <html>
   <div>
@@ -9,14 +7,19 @@ let () =
   </div>
 </html>
 |}
-  in
-  let compressed = Brotli.Compress.of_bytes raw_data in
-  let len = Brotli.to_bytes compressed |> Bytes.length in
+let () =
+  let compressed = Brotli.Compress.bytes raw_data in
+  let compressed_len = Bytes.length compressed in
   Printf.sprintf
-    "Org data len:%d, compressed length: %d" (Bytes.length raw_data) len
-  |> print_endline;
-  Printf.sprintf "Raw Output:%s" (Brotli.to_bytes compressed)
+    "Compressed length %d, data:%s"
+    compressed_len
+    compressed
   |> print_endline;
 
-  Brotli.Decompress.to_bytes (Brotli.to_bytes compressed)
+  let decompressed = Brotli.Decompress.bytes compressed in
+  let decompressed_len = Bytes.length decompressed in
+  Printf.sprintf
+    "Decompressed length %d, data:%s"
+    decompressed_len
+    decompressed
   |> print_endline

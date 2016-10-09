@@ -27,12 +27,10 @@ build-doc: [ "ocaml" "setup.ml" "-doc" ]
 depexts: [
   [["ubuntu"] ["clang" "libc++-dev"]]
   [["debian"] ["clang" "libc++-dev"]]
-  [["source" "darwin" "linux"]
+  [["source" "osx" "linux"]
    ["https://raw.githubusercontent.com/fxfactorial/ocaml-brotli/master/prepare.sh"]]
  ]
 depends: [
-  "lwt"
-  "base-basearray"
   "oasis" {build}
   "conf-autoconf" {build}
   "ocamlfind" {build}

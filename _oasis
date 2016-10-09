@@ -36,7 +36,6 @@ Library brotli
     -cc clang++ -g -w +a-4-40..42-44-45-48
     -cclib -fsanitize=address -ccopt -fsanitize=address
   Modules: Brotli
-  BuildDepends: bigarray
   CSources: brotli_stubs.c
 
 Executable stress_test
@@ -48,7 +47,6 @@ Executable stress_test
   NativeOpt: -g -w +a-4-40..42-44-45-48
   ByteOpt: -g -w +a-4-40..42-44-45-48
   BuildDepends: brotli
-
 
 Document api
   Title: API reference for brotli
