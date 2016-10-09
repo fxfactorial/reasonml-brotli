@@ -12,15 +12,50 @@
 //C++
 #include <cstdlib>
 #include <vector>
-#include <string>
-#include <fstream>
-#include <algorithm>
-#include <iostream>
-#include <iterator>
 
 #define Val_none Val_int(0)
 
 extern "C" {
+
+  static char
+    *brotli_decoder_version = NULL,
+    *brotli_encoder_version = NULL;
+
+  __attribute__((constructor))
+    void set_version(void)
+  {
+    char version[16];
+    uint32_t v_d = BrotliDecoderVersion();
+
+    snprintf(version, sizeof(version), "%d.%d.%d",
+	     v_d >> 24, (v_d >> 12) & 0xFFF, v_d & 0xFFF);
+    brotli_decoder_version = (char*)malloc(16);
+    strcpy(brotli_decoder_version, version);
+
+    uint32_t v_e = BrotliEncoderVersion();
+    snprintf(version, sizeof(version), "%d.%d.%d",
+	     v_e >> 24, (v_e >> 12) & 0xFFF, v_e & 0xFFF);
+    brotli_encoder_version = (char*)malloc(16);
+    strcpy(brotli_encoder_version, version);
+  }
+
+  CAMLprim value ml_brotli_decoder_version(__attribute__((unused)) value)
+  {
+    CAMLparam0();
+    CAMLlocal1(v);
+    v = caml_copy_string(brotli_decoder_version);
+    free(brotli_decoder_version);
+    CAMLreturn(v);
+  }
+
+  CAMLprim value ml_brotli_encoder_version(__attribute__((unused)) value)
+  {
+    CAMLparam0();
+    CAMLlocal1(v);
+    v = caml_copy_string(brotli_encoder_version);
+    free(brotli_encoder_version);
+    CAMLreturn(v);
+  }
 
   CAMLprim value ml_brotli_compress(value dict_opt,
 				    value params,
@@ -101,7 +136,6 @@ extern "C" {
       length = caml_string_length(decompress_me),
       custom_dictionary_length = 0;
 
-    printf("Length is: %ld\n", length);
     std::vector<uint8_t> output;
     const size_t kBufferSize = 65536;
     uint8_t *buffer = new uint8_t[kBufferSize];
@@ -128,7 +162,6 @@ extern "C" {
 				      &next_out,
 				      &total_out,
 				      state);
-      // printf("Brotli Result: %s\n", input);
       size_t used_out = kBufferSize - available_out;
       if (used_out != 0)
 	output.insert(output.end(), buffer, buffer + used_out);
@@ -145,7 +178,6 @@ extern "C" {
       BrotliDestroyState(state);
       caml_failwith(BrotliErrorString(BrotliGetErrorCode(state)));
     }
-
   }
 
 }

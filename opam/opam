@@ -10,7 +10,7 @@ bug-reports: "https://github.com/fxfactorial/ocaml-brotli/issues"
 dev-repo: "https://github.com/fxfactorial/ocaml-brotli.git"
 tags: [ "clib:stdc" "clib:brotli"  ]
 build: [
-  ["oasis" "setup"]
+  ["oasis" "setup" "-setup-update" "dynamic"]
   ["ocaml" "setup.ml" "-configure" "--prefix" prefix]
   ["ocaml" "setup.ml" "-build"]
 ]
@@ -22,6 +22,25 @@ build-test: [
   ["ocaml" "setup.ml" "-configure" "--enable-tests"]
   ["ocaml" "setup.ml" "-build"]
   ["ocaml" "setup.ml" "-test"]
+]
+messages:[
+ "You'll need to have libbrotli installed, it is available via a depext"
+ "opam depext brotli"
+ "Or install it yourself: https://github.com/bagder/libbrotli"
+]
+post-messages:[
+"Simple example:"
+ "let raw_data =
+    {|
+<html>
+  <div>
+    Hello World World World World
+  </div>
+</html>
+|}"
+"let compressed = Brotli.Compress.bytes raw_data"
+"let decompressed = Brotli.Decompress.bytes compressed"
+{success}
 ]
 build-doc: [ "ocaml" "setup.ml" "-doc" ]
 depexts: [

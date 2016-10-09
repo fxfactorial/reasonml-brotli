@@ -1,12 +1,21 @@
 
+
 module Decompress = struct
+
+  external decoder_version : unit -> string = "ml_brotli_decoder_version"
 
   external bytes :
     ?custom_dictionary:bytes -> bytes -> bytes = "ml_brotli_decompress"
 
+  let version = decoder_version ()
+
 end
 
 module Compress = struct
+
+  external encoder_version : unit -> string = "ml_brotli_encoder_version"
+
+  let version = encoder_version ()
 
   type mode = Generic | Text | Font
 

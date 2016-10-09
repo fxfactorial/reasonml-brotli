@@ -7,12 +7,17 @@ module Decompress : sig
   (** Decompress compressed byte string *)
   val bytes : ?custom_dictionary:bytes -> bytes -> bytes
 
+  (** Brotli decoder version *)
+  val version : string
 end
 
 (** Provides functions for compression using the Brotli algorithm with
     adjustable parameters, defaults are what Google uses. Be aware
     that compression may raise the Compression_failure exception *)
 module Compress : sig
+
+  (** Brotli encoder version *)
+  val version : string
 
   type mode =
     | Generic (** Compression is not aware of any special features of input *)

@@ -10,17 +10,16 @@ Authors:      Edgar Aroutiounian <edgar.factorial@gmail.com>
 License:      BSD-3-clause
 Plugins:      META (0.4), DevFiles (0.4)
 AlphaFeatures: ocamlbuild_more_args
+BuildTools: ocamlbuild, ocamldoc
 
 Description:
-  OCaml Bindings to brotli, Google's new compression algorithm
+  OCaml Bindings to brotli, Google's compression algorithm for the web
 
-  Uses Bigarrays for memory efficiency and ready for Lwt concurrency
   Source: https://github.com/google/brotli/
   RFC: http://www.ietf.org/id/draft-alakuijala-brotli
 
 Library brotli
   Path: src
-  BuildTools:ocamlbuild
   install: true
   CClib:
     -L/usr/local/lib -lbrotlidec -lbrotlienc -lc++
@@ -30,17 +29,17 @@ Library brotli
     -O2 -fsanitize=address -fno-optimize-sibling-calls
     -g -Wall -std=c++14 -x c++ -I/usr/local/include 
   NativeOpt:
-    -cc clang++ -g -w +a-4-40..42-44-45-48
+    -cc clang++ -g -w +a-4-40..42-44-45-48 -O2
     -cclib -fsanitize=address -ccopt -fsanitize=address
   ByteOpt:
     -cc clang++ -g -w +a-4-40..42-44-45-48
     -cclib -fsanitize=address -ccopt -fsanitize=address
   Modules: Brotli
+  CompiledObject:best
   CSources: brotli_stubs.c
 
 Executable stress_test
   Path: example
-  BuildTools:ocamlbuild
   install: false
   MainIs: e.ml
   CompiledObject: native
@@ -48,12 +47,18 @@ Executable stress_test
   ByteOpt: -g -w +a-4-40..42-44-45-48
   BuildDepends: brotli
 
+SourceRepository master
+  Type:     git
+  Location: https://github.com/fxfactorial/ocaml-brotli.git
+  Browser:  https://github.com/fxfactorial/ocaml-brotli
+
 Document api
-  Title: API reference for brotli
-  Type: ocamlbuild (0.4)
-  Authors: Edgar Aroutiounian
-  BuildTools: ocamldoc, ocamlbuild
-  Format: HTML
-  Index: index.html
-  XOCamlbuildPath: .
-  XOCamlbuildLibraries: brotli
+  Title:              Documentation and API reference for Brotli
+  Type:               ocamlbuild (0.4)
+  InstallDir:         $htmldir/brotli
+  PostCommand:        cp doc/style.css api.docdir && cp api.docdir/* doc
+  XOCamlbuildPath:    doc
+  XOCamlbuildModules: src/Brotli
+  Install:            true
+  XOCamlbuildExtraArgs:
+    "-docflags '-colorize-code -charset utf-8 -hide Brotli -hide Pervasives'"

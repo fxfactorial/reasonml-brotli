@@ -1,5 +1,5 @@
-
-let raw_data =
+let () =
+  let raw_data =
     {|
 <html>
   <div>
@@ -7,14 +7,17 @@ let raw_data =
   </div>
 </html>
 |}
-let () =
+  in
+  Printf.sprintf
+    "Encoder version %s, Decoder version %s"
+    Brotli.Compress.version
+    Brotli.Decompress.version
+  |> print_endline;
+
   let compressed = Brotli.Compress.bytes raw_data in
   let compressed_len = Bytes.length compressed in
   Printf.sprintf
-    "Compressed length %d, data:%s"
-    compressed_len
-    compressed
-  |> print_endline;
+    "Compressed length %d" compressed_len |> print_endline;
 
   let decompressed = Brotli.Decompress.bytes compressed in
   let decompressed_len = Bytes.length decompressed in
@@ -22,4 +25,8 @@ let () =
     "Decompressed length %d, data:%s"
     decompressed_len
     decompressed
-  |> print_endline
+  |> print_endline;
+
+  if String.compare raw_data decompressed = 0
+  then print_endline "Data was correct in roundtrip"
+  else failwith "Data was not equal during roundtrip"
