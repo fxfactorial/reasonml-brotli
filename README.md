@@ -1,6 +1,11 @@
 These are OCaml bindings to the compression algorithm/code released by
 Google called [Brotli](https://github.com/google/brotli).
 
+# Dependencies
+Make sure you have [libbrotli](https://github.com/bagder/libbrotli)
+installed, otherwise this installation will fail. There's a helper
+script in this repo that will do it for you, `bash prepare.sh`.
+
 # Installation
 
 I assume that you have [opam](https://opam.ocaml.org) installed, it is
