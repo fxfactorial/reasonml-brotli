@@ -22,12 +22,15 @@ assuming you're in the root of the directory, do:
 $ opam pin add brotli . -y
 ```
 
-I have only provided a way to use this from native code (So you can't
-play with it in `utop`), you can use it in your programs like:
+Compile with:
 
 ```shell
 $ ocamlfind ocamlopt -package brotli -linkpkg f.ml -o program
 ```
+
+Or play with it directly in `utop`:
+
+![](./compressed_image.png)
 
 The API is very simple and limited to compressing, decompressing byte
 strings; type `make doc` in the source repo and you get pretty HTML

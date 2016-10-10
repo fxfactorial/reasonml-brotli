@@ -23,19 +23,20 @@ Library brotli
   install: true
   CClib:
     -L/usr/local/lib -lbrotlidec -lbrotlienc -lc++
+  # Note how only the native compiler gets -fsanitize=address
+  # So that the byte code works without having to have
+  # the sanitize library
   CCOpt:
     -Wextra -fno-omit-frame-pointer
     -fsanitize=undefined-trap -fsanitize-undefined-trap-on-error
-    -O2 -fsanitize=address -fno-optimize-sibling-calls
-    -g -Wall -std=c++14 -x c++ -I/usr/local/include 
+    -O2 -fno-optimize-sibling-calls
+    -std=c++14 -x c++ -I/usr/local/include 
   NativeOpt:
-    -cc clang++ -g -w +a-4-40..42-44-45-48 -O2
+    -cc clang++ -w +a-4-40..42-44-45-48 -O2
     -cclib -fsanitize=address -ccopt -fsanitize=address
   ByteOpt:
-    -cc clang++ -g -w +a-4-40..42-44-45-48
-    -cclib -fsanitize=address -ccopt -fsanitize=address
+    -cc clang++ -w +a-4-40..42-44-45-48
   Modules: Brotli
-  CompiledObject:best
   CSources: brotli_stubs.c
 
 Executable stress_test
