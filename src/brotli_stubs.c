@@ -178,8 +178,9 @@ extern "C" {
       CAMLreturn(decompressed_string);
     } else {
       delete[] buffer;
+      const char *s = BrotliErrorString(BrotliGetErrorCode(state));
       BrotliDestroyState(state);
-      caml_failwith(BrotliErrorString(BrotliGetErrorCode(state)));
+      caml_failwith(s);
     }
   }
 
