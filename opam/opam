@@ -1,7 +1,7 @@
 # -*- conf -*-
 opam-version: "1.2"
 name: "brotli"
-version: "1.2.0"
+version: "1.2.1"
 maintainer: "Edgar Aroutiounian <edgar.factorial@gmail.com>"
 authors: [ "Edgar Aroutiounian <edgar.factorial@gmail.com>" ]
 license: "BSD-3-clause"
@@ -27,14 +27,9 @@ messages:[
  "Note, you'll need to have libbrotli installed: https://github.com/bagder/libbrotli"
 ]
 post-messages:[
-"Make sure you had libbrotli installed, get it at:https://github.com/bagder/libbrotli" {failure & (os = "osx")}
-"Make sure you have clang++ available" {failure & (os != "osx")}
+"Make sure you had libbrotli installed, get it at:https://github.com/bagder/libbrotli" {failure}
 ]
 build-doc: [ "ocaml" "setup.ml" "-doc" ]
-depexts: [
-  [["ubuntu"] ["clang" "libc++-dev"]]
-  [["debian"] ["clang" "libc++-dev"]]
- ]
 depends: [
   "oasis" {build}
   "ocamlfind" {build}

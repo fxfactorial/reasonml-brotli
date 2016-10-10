@@ -11,7 +11,10 @@
 #include <brotli/encode.h>
 //C++
 #include <cstdlib>
+#include <cstdio>
 #include <vector>
+#include <memory>
+#include <cstring>
 
 #define Val_none Val_int(0)
 
