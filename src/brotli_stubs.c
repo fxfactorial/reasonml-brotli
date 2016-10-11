@@ -170,6 +170,8 @@ extern "C" {
 	output.insert(output.end(), buffer, buffer + used_out);
     }
     caml_leave_blocking_section();
+    // Score for Address Sanitizier
+    delete[] buffer;
 
     if ((result == BROTLI_RESULT_SUCCESS) == true) {
       decompressed_string = caml_alloc_string(output.size());
@@ -177,7 +179,6 @@ extern "C" {
       BrotliDestroyState(state);
       CAMLreturn(decompressed_string);
     } else {
-      delete[] buffer;
       const char *s = BrotliErrorString(BrotliGetErrorCode(state));
       BrotliDestroyState(state);
       caml_failwith(s);

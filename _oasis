@@ -21,9 +21,19 @@ Description:
 Library brotli
   Path: src
   install: true
-  CClib: -L/usr/local/lib -lbrotlidec -lbrotlienc -lstdc++
-  CCOpt: -O2 -std=c++14 -x c++ -I/usr/local/include 
-  NativeOpt: -w +a-4-40..42-44-45-48 -O2
+  CClib:
+    -L/usr/local/lib -lbrotlidec -lbrotlienc -lstdc++
+  # Note how only the native compiler gets -fsanitize=address
+  # So that the byte code works without having to have
+  # the sanitize library
+  CCOpt:
+    -Wextra -fno-omit-frame-pointer
+    -fsanitize-undefined-trap-on-error
+    -O2 -fno-optimize-sibling-calls
+    -std=c++14 -x c++ -I/usr/local/include
+  NativeOpt:
+    -w +a-4-40..42-44-45-48 -O2
+    -cclib -fsanitize=address -ccopt -fsanitize=address
   ByteOpt: -w +a-4-40..42-44-45-48
   Modules: Brotli
   CSources: brotli_stubs.c
