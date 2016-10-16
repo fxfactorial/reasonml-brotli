@@ -56,8 +56,8 @@ Document api
   Title:              Documentation and API reference for Brotli
   Type:               ocamlbuild (0.4)
   InstallDir:         $htmldir/brotli
-  PostCommand:        cp doc/style.css api.docdir && cp api.docdir/* doc
-  XOCamlbuildPath:    doc
+  PostCommand:        cp docs/style.css api.docdir && cp api.docdir/* docs
+  XOCamlbuildPath:    docs
   XOCamlbuildModules: src/Brotli
   Install:            true
   XOCamlbuildExtraArgs:
