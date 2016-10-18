@@ -1,0 +1,37 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<html>
+<head>
+<link rel="stylesheet" href="style.css" type="text/css">
+<meta content="text/html; charset=utf-8" http-equiv="Content-Type">
+<link rel="Start" href="index.html">
+<link rel="next" href="Brotli.Compress.html">
+<link rel="Up" href="Brotli.html">
+<link title="Index of types" rel=Appendix href="index_types.html">
+<link title="Index of values" rel=Appendix href="index_values.html">
+<link title="Index of modules" rel=Appendix href="index_modules.html">
+<link title="Brotli" rel="Chapter" href="Brotli.html"><title>Brotli.Decompress</title>
+</head>
+<body>
+<div class="navbar">&nbsp;<a class="up" href="Brotli.html" title="Brotli">Up</a>
+&nbsp;<a class="post" href="Brotli.Compress.html" title="Brotli.Compress">Next</a>
+</div>
+<h1>Module <a href="type_Brotli.Decompress.html">Brotli.Decompress</a></h1>
+
+<pre><span class="keyword">module</span> Decompress: <code class="code"><span class="keyword">sig</span></code> <a href="Brotli.Decompress.html">..</a> <code class="code"><span class="keyword">end</span></code></pre><div class="info module top">
+Provides two functions for decompressing Brotli algorithm
+    compressed bytes, files; functions may raise Failure exception<br>
+</div>
+<hr width="100%">
+
+<pre><span id="VALbytes"><span class="keyword">val</span> bytes</span> : <code class="type">?custom_dictionary:bytes -> bytes -> bytes</code></pre><div class="info ">
+Decompress compressed byte string<br>
+</div>
+
+<pre><span id="VALversion"><span class="keyword">val</span> version</span> : <code class="type">string</code></pre><div class="info ">
+Brotli decoder version<br>
+</div>
+
+<pre><span id="VALfile"><span class="keyword">val</span> file</span> : <code class="type">?custom_dictionary:bytes -><br>       in_filename:string -> out_filename:string -> unit -> unit</code></pre><div class="info ">
+Decompress the input file to the output file<br>
+</div>
+</body></html>

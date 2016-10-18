@@ -33,8 +33,10 @@ Or play with it directly in `utop`:
 ![](./compressed_image.png)
 
 The API is very simple and limited to compressing, decompressing byte
-strings; type `make doc` in the source repo and you get pretty HTML
-docs in the `doc` repo, just open `index.html`.
+strings and files; type `make doc` in the source repo and you get
+pretty HTML docs in the `doc` repo, just open `index.html`.
+
+See the documentation [online](http://hyegar.com/ocaml-brotli/)
 
 # API 
 
@@ -44,8 +46,8 @@ settings and I've exposed the ability to add a custom dictionary.
 ```ocaml
 (** OCaml bindings to the Brotli compression library *)
 
-(** Provides functions for decompressing Brotli algorithm compressed
-    files, functions may raise the Decompression_failure exception *)
+(** Provides two functions for decompressing Brotli algorithm
+    compressed bytes, files; functions may raise Failure exception *)
 module Decompress : sig
 
   (** Decompress compressed byte string *)
@@ -53,11 +55,18 @@ module Decompress : sig
 
   (** Brotli decoder version *)
   val version : string
+
+  (** Decompress the input file to the output file *)
+  val file :
+    ?custom_dictionary:bytes ->
+    in_filename:string -> out_filename:string -> unit ->
+    unit
+
 end
 
 (** Provides functions for compression using the Brotli algorithm with
     adjustable parameters, defaults are what Google uses. Be aware
-    that compression may raise the Compression_failure exception *)
+    that compression may raise Failure exception *)
 module Compress : sig
 
   (** Brotli encoder version *)
@@ -93,6 +102,17 @@ module Compress : sig
     ?lgblock:lgblock ->
     ?custom_dictionary:bytes ->
     bytes -> bytes
+
+  (** Compress in the input file to the output file name*)
+  val file:
+    ?mode:mode ->
+    ?quality:quality ->
+    ?lgwin:lgwin ->
+    ?lgblock:lgblock ->
+    ?custom_dictionary:bytes ->
+    in_filename:string ->
+    out_filename:string -> unit
+    -> unit
 
 end
 ```
