@@ -20,7 +20,7 @@
 <pre><span class="keyword">module</span> Compress: <code class="code"><span class="keyword">sig</span></code> <a href="Brotli.Compress.html">..</a> <code class="code"><span class="keyword">end</span></code></pre><div class="info module top">
 Provides functions for compression using the Brotli algorithm with
     adjustable parameters, defaults are what Google uses. Be aware
-    that compression may raise the Compression_failure exception<br>
+    that compression may raise Failure exception<br>
 </div>
 <hr width="100%">
 
@@ -86,5 +86,9 @@ Base 2 logarithm of the maximum input block size. Range is `_16 to
 
 <pre><span id="VALbytes"><span class="keyword">val</span> bytes</span> : <code class="type">?mode:<a href="Brotli.Compress.html#TYPEmode">mode</a> -><br>       ?quality:<a href="Brotli.Compress.html#TYPEquality">quality</a> -><br>       ?lgwin:<a href="Brotli.Compress.html#TYPElgwin">lgwin</a> -><br>       ?lgblock:<a href="Brotli.Compress.html#TYPElgblock">lgblock</a> -><br>       ?custom_dictionary:bytes -> bytes -> bytes</code></pre><div class="info ">
 Compress the given bytes string to a compressed bytes string<br>
+</div>
+
+<pre><span id="VALfile"><span class="keyword">val</span> file</span> : <code class="type">?mode:<a href="Brotli.Compress.html#TYPEmode">mode</a> -><br>       ?quality:<a href="Brotli.Compress.html#TYPEquality">quality</a> -><br>       ?lgwin:<a href="Brotli.Compress.html#TYPElgwin">lgwin</a> -><br>       ?lgblock:<a href="Brotli.Compress.html#TYPElgblock">lgblock</a> -><br>       ?custom_dictionary:bytes -><br>       in_filename:string -> out_filename:string -> unit -> unit</code></pre><div class="info ">
+Compress in the input file to the output file name<br>
 </div>
 </body></html>

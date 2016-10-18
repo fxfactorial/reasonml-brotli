@@ -18,8 +18,8 @@
 <h1>Module <a href="type_Brotli.Decompress.html">Brotli.Decompress</a></h1>
 
 <pre><span class="keyword">module</span> Decompress: <code class="code"><span class="keyword">sig</span></code> <a href="Brotli.Decompress.html">..</a> <code class="code"><span class="keyword">end</span></code></pre><div class="info module top">
-Provides functions for decompressing Brotli algorithm compressed
-    files, functions may raise the Decompression_failure exception<br>
+Provides two functions for decompressing Brotli algorithm
+    compressed bytes, files; functions may raise Failure exception<br>
 </div>
 <hr width="100%">
 
@@ -29,5 +29,9 @@ Decompress compressed byte string<br>
 
 <pre><span id="VALversion"><span class="keyword">val</span> version</span> : <code class="type">string</code></pre><div class="info ">
 Brotli decoder version<br>
+</div>
+
+<pre><span id="VALfile"><span class="keyword">val</span> file</span> : <code class="type">?custom_dictionary:bytes -><br>       in_filename:string -> out_filename:string -> unit -> unit</code></pre><div class="info ">
+Decompress the input file to the output file<br>
 </div>
 </body></html>
