@@ -35,6 +35,7 @@ Library brotli
     -w +a-4-40..42-44-45-48 -O2
     -cclib -fsanitize=address -ccopt -fsanitize=address
   ByteOpt: -w +a-4-40..42-44-45-48
+  BuildDepends:unix
   Modules: Brotli
   CSources: brotli_stubs.c
 

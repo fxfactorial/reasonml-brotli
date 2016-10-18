@@ -1,5 +1,3 @@
-
-
 module Decompress = struct
 
   external decoder_version : unit -> string = "ml_brotli_decoder_version"
@@ -8,6 +6,22 @@ module Decompress = struct
     ?custom_dictionary:bytes -> bytes -> bytes = "ml_brotli_decompress"
 
   let version = decoder_version ()
+
+  let file ?custom_dictionary ~in_filename ~out_filename () =
+    if not (Sys.file_exists in_filename)
+    then raise (Invalid_argument "File does not exist")
+    else
+      let stats = Unix.stat in_filename in
+      let b = Buffer.create stats.Unix.st_size in
+      open_in in_filename |> fun ic_data ->
+      Buffer.add_channel b ic_data stats.Unix.st_size;
+      close_in ic_data;
+      let decompressed = bytes ?custom_dictionary (Buffer.contents b) in
+      Buffer.reset b;
+      Buffer.add_bytes b decompressed;
+      open_out out_filename |> fun oc_data ->
+      Buffer.output_buffer oc_data b;
+      close_out oc_data
 
 end
 
@@ -67,5 +81,33 @@ module Compress = struct
       custom_dictionary
       (make_params mode quality lgwin lgblock)
       data
+
+   let file
+      ?(mode=Generic)
+      ?(quality : quality = `_11)
+      ?(lgwin : lgwin = `_22)
+      ?(lgblock : lgblock = `_0)
+      ?custom_dictionary
+      ~in_filename
+      ~out_filename () =
+     if not (Sys.file_exists in_filename)
+     then raise (Invalid_argument "File does not exist")
+     else
+       let stats = Unix.stat in_filename in
+       let b = Buffer.create stats.Unix.st_size in
+       open_in in_filename |> fun ic_data ->
+       Buffer.add_channel b ic_data stats.Unix.st_size;
+       close_in ic_data;
+       let compressed =
+         compress_bytes
+           custom_dictionary
+           (make_params mode quality lgwin lgblock)
+           (Buffer.contents b)
+       in
+       Buffer.reset b;
+       Buffer.add_bytes b compressed;
+       open_out out_filename |> fun oc_data ->
+       Buffer.output_buffer oc_data b;
+       close_out oc_data
 
 end
