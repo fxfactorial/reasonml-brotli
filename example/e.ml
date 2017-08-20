@@ -19,7 +19,13 @@ let () =
   Printf.sprintf
     "Compressed length %d" compressed_len |> print_endline;
 
-  let decompressed = Brotli.Decompress.bytes compressed in
+  let decompressed =
+    Brotli.Decompress.bytes
+      ~on_part_decompressed:(fun piece ->
+          Printf.sprintf "Finished %d" (Nativeint.to_int piece) |> print_endline
+        )
+      compressed
+  in
   let decompressed_len = Bytes.length decompressed in
   Printf.sprintf
     "Decompressed length %d, data:%s"

@@ -1,7 +1,7 @@
 # -*- conf -*-
 opam-version: "1.2"
 name: "brotli"
-version: "1.2.2"
+version: "1.3.0"
 maintainer: "Edgar Aroutiounian <edgar.factorial@gmail.com>"
 authors: [ "Edgar Aroutiounian <edgar.factorial@gmail.com>" ]
 license: "BSD-3-clause"
@@ -18,22 +18,22 @@ install: ["ocaml" "setup.ml" "-install"]
 remove: [
   ["ocamlfind" "remove" "brotli"]
 ]
+depexts: [
+  [["osx" "homebrew"] ["brotli"]]
+]
 build-test: [
   ["ocaml" "setup.ml" "-configure" "--enable-tests"]
   ["ocaml" "setup.ml" "-build"]
   ["ocaml" "setup.ml" "-test"]
 ]
 messages:[
- "Note, you'll need to have libbrotli installed: https://github.com/bagder/libbrotli"
+
 ]
-post-messages:[
-"Make sure you had libbrotli installed, get it at:https://github.com/bagder/libbrotli" {failure}
-"Make sure you have at least gcc 5.4, gcc4 will not understand -std=c++14, -fsanitize-undefined-trap-on-error" {failure & (os = "linux")}
-]
+post-messages:[]
 build-doc: [ "ocaml" "setup.ml" "-doc" ]
 depends: [
   "oasis" {build}
   "ocamlfind" {build}
   "ocamlbuild" {build}
 ]
-available: [ ocaml-version >= "4.03.0" ]
+available: [ ocaml-version >= "4.04.0" ]

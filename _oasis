@@ -1,8 +1,8 @@
 # -*- conf -*-
 OASISFormat:  0.4
-OCamlVersion: >= 4.03.0
+OCamlVersion: >= 4.04.0
 Name:         brotli
-Version:      1.2.2
+Version:      1.3.0
 Maintainers:  Edgar Aroutiounian
 Homepage:     http://hyegar.com
 Synopsis:     Bindings to Google's Brotli compresion algorithm
@@ -23,9 +23,6 @@ Library brotli
   install: true
   CClib:
     -L/usr/local/lib -lbrotlidec -lbrotlienc -lstdc++
-  # Note how only the native compiler gets -fsanitize=address
-  # So that the byte code works without having to have
-  # the sanitize library
   CCOpt:
     -Wextra -fno-omit-frame-pointer
     -fsanitize-undefined-trap-on-error
