@@ -10,7 +10,7 @@ module Decompress = struct
 
   let version = decoder_version ()
 
-  let file ?custom_dictionary ~in_filename ~out_filename () =
+  let file ?custom_dictionary ?on_part_decompressed ~in_filename ~out_filename () =
     if not (Sys.file_exists in_filename)
     then raise (Invalid_argument "File does not exist")
     else
@@ -19,7 +19,9 @@ module Decompress = struct
       open_in in_filename |> fun ic_data ->
       Buffer.add_channel b ic_data stats.Unix.st_size;
       close_in ic_data;
-      let decompressed = bytes ?custom_dictionary (Buffer.contents b) in
+      let decompressed =
+        bytes ?custom_dictionary ?on_part_decompressed (Buffer.contents b)
+      in
       Buffer.reset b;
       Buffer.add_bytes b decompressed;
       open_out out_filename |> fun oc_data ->
@@ -110,8 +112,8 @@ module Compress = struct
        close_in ic_data;
        let compressed =
          compress_bytes
+           ?on_part_compressed
            custom_dictionary
-           
            (make_params mode quality lgwin lgblock)
            (Buffer.contents b)
        in

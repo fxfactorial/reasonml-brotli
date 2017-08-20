@@ -17,6 +17,7 @@ module Decompress : sig
   (** Decompress the input file to the output file *)
   val file :
     ?custom_dictionary:bytes ->
+    ?on_part_decompressed:(Nativeint.t -> unit) ->
     in_filename:string -> out_filename:string -> unit ->
     unit
 
