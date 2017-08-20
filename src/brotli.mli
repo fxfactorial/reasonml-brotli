@@ -4,8 +4,12 @@
     compressed bytes, files; functions may raise Failure exception *)
 module Decompress : sig
 
-  (** Decompress compressed byte string *)
-  val bytes : ?custom_dictionary:bytes -> bytes -> bytes
+  (** Decompress compressed byte string with optional callback *)
+  val bytes :
+    ?custom_dictionary:bytes ->
+    ?on_part_decompressed:(Nativeint.t -> unit) ->
+    bytes ->
+    bytes
 
   (** Brotli decoder version *)
   val version : string

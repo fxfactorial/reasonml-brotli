@@ -6,6 +6,7 @@
 #include <caml/memory.h>
 #include <caml/fail.h>
 #include <caml/signals.h>
+#include <caml/callback.h>
 
 #include <brotli/decode.h>
 #include <brotli/encode.h>
@@ -127,10 +128,12 @@ extern "C" {
     }
   }
 
-  CAMLprim value ml_brotli_decompress(value dict_opt, value decompress_me)
+  CAMLprim value ml_brotli_decompress(value dict_opt,
+				      value part_decompress_opt,
+				      value decompress_me)
   {
-    CAMLparam2(dict_opt, decompress_me);
-    CAMLlocal1(decompressed_string);
+    CAMLparam3(dict_opt, part_decompress_opt, decompress_me);
+    CAMLlocal2(decompressed_string, part_completed_cb);
 
     const uint8_t *input = (uint8_t*)String_val(decompress_me);
     const uint8_t *custom_dictionary = nullptr;
@@ -153,6 +156,10 @@ extern "C" {
   				       custom_dictionary);
     }
 
+    if ((part_decompress_opt == Val_none) == false) {
+      part_completed_cb = Field(part_decompress_opt, 0);
+    }
+
     caml_enter_blocking_section();
     while (result == BROTLI_DECODER_NEEDS_MORE_OUTPUT) {
       result = BrotliDecoderDecompressStream(dec,
@@ -162,6 +169,9 @@ extern "C" {
       size_t buffer_length = 0;
       const uint8_t *buffer = BrotliDecoderTakeOutput(dec, &buffer_length);
       if (buffer_length != 0) {
+	if ((part_decompress_opt == Val_none) == false) {
+	  caml_callback(part_completed_cb, caml_copy_nativeint(buffer_length));
+	}
 	output.insert(output.end(), buffer, buffer + buffer_length);
       }
     }

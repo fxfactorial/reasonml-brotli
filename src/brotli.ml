@@ -3,7 +3,10 @@ module Decompress = struct
   external decoder_version : unit -> string = "ml_brotli_decoder_version"
 
   external bytes :
-    ?custom_dictionary:bytes -> bytes -> bytes = "ml_brotli_decompress"
+    ?custom_dictionary:bytes ->
+    ?on_part_decompressed:(Nativeint.t -> unit) ->
+    bytes ->
+    bytes = "ml_brotli_decompress"
 
   let version = decoder_version ()
 
