@@ -59,15 +59,17 @@ module Compress : sig
     ?lgwin:lgwin ->
     ?lgblock:lgblock ->
     ?custom_dictionary:bytes ->
+    ?on_part_compressed:(Nativeint.t -> unit) ->
     bytes -> bytes
 
-  (** Compress in the input file to the output file name*)
+  (** Compress in the input file to the output file name *)
   val file:
     ?mode:mode ->
     ?quality:quality ->
     ?lgwin:lgwin ->
     ?lgblock:lgblock ->
     ?custom_dictionary:bytes ->
+    ?on_part_compressed:(Nativeint.t -> unit) ->
     in_filename:string ->
     out_filename:string -> unit
     -> unit

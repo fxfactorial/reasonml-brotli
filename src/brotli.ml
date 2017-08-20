@@ -71,7 +71,11 @@ module Compress = struct
       lgwin = int_of_lgwin lgw; lgblock = int_of_lgblock lgb }
 
   external compress_bytes :
-    bytes option -> params -> bytes -> bytes = "ml_brotli_compress"
+    ?on_part_compressed:(Nativeint.t -> unit) ->
+    bytes option ->
+    params ->
+    bytes ->
+    bytes = "ml_brotli_compress"
 
   let bytes
       ?(mode=Generic)
@@ -79,8 +83,10 @@ module Compress = struct
       ?(lgwin : lgwin = `_22)
       ?(lgblock : lgblock = `_0)
       ?custom_dictionary
+      ?on_part_compressed
       data =
     compress_bytes
+      ?on_part_compressed
       custom_dictionary
       (make_params mode quality lgwin lgblock)
       data
@@ -91,6 +97,7 @@ module Compress = struct
       ?(lgwin : lgwin = `_22)
       ?(lgblock : lgblock = `_0)
       ?custom_dictionary
+      ?on_part_compressed
       ~in_filename
       ~out_filename () =
      if not (Sys.file_exists in_filename)
@@ -104,6 +111,7 @@ module Compress = struct
        let compressed =
          compress_bytes
            custom_dictionary
+           
            (make_params mode quality lgwin lgblock)
            (Buffer.contents b)
        in

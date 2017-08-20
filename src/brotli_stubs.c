@@ -21,9 +21,8 @@
 
 extern "C" {
 
-  static char
-    *brotli_decoder_version = NULL,
-    *brotli_encoder_version = NULL;
+  static char *brotli_decoder_version = NULL;
+  static char *brotli_encoder_version = NULL;
 
   __attribute__((constructor))
     void set_version(void)
@@ -61,28 +60,25 @@ extern "C" {
     CAMLreturn(v);
   }
 
-  CAMLprim value ml_brotli_compress(value dict_opt,
+  CAMLprim value ml_brotli_compress(value part_compress_opt,
+				    value dict_opt,
   				    value params,
   				    value compress_me)
   {
-    CAMLparam3(dict_opt, params, compress_me);
-    CAMLlocal1(compressed_string);
+    CAMLparam4(part_compress_opt, dict_opt, params, compress_me);
+    CAMLlocal2(compressed_string, part_compress_cb);
 
-    uint8_t
-      *input = (uint8_t*)String_val(compress_me),
-      *output = nullptr,
-      *custom_dictionary = nullptr,
-      *next_out = nullptr;
-    size_t
-      length = caml_string_length(compress_me),
-      output_length = length + (length >> 2) + 10240,
-      custom_dictionary_length = 0,
-      available_in = 0,
-      available_out = 0;
-    const uint8_t *next_in = nullptr;
+    bool ml_compress_cb = (part_compress_opt == Val_none) == false;
+    BROTLI_BOOL ok = BROTLI_TRUE;
+    uint8_t *input = (uint8_t*)String_val(compress_me);
 
-    auto *enc = BrotliEncoderCreateInstance(nullptr, nullptr, nullptr);
-    output = new uint8_t[output_length];
+    size_t available_in = caml_string_length(compress_me);
+    size_t available_out = 0;
+    const uint8_t* next_in = input;
+    uint8_t* next_out = nullptr;
+
+    std::vector<uint8_t> output;
+    BrotliEncoderState *enc = BrotliEncoderCreateInstance(nullptr, nullptr, nullptr);
 
     // Setting the compression parameters
     BrotliEncoderSetParameter(enc, BROTLI_PARAM_MODE, Int_val(Field(params, 0)));
@@ -91,39 +87,47 @@ extern "C" {
     BrotliEncoderSetParameter(enc, BROTLI_PARAM_LGBLOCK, Int_val(Field(params, 3)));
 
     if ((dict_opt == Val_none) == false) {
-      custom_dictionary = (uint8_t *)String_val(Field(dict_opt, 0));
-      custom_dictionary_length = caml_string_length(Field(dict_opt, 0));
+      uint8_t *custom_dictionary = (uint8_t *)String_val(Field(dict_opt, 0));
+      size_t custom_dictionary_length = caml_string_length(Field(dict_opt, 0));
       BrotliEncoderSetCustomDictionary(enc,
   				       custom_dictionary_length,
   				       custom_dictionary);
     }
 
-    available_out = output_length;
-    next_out = output;
-    available_in = length;
-    next_in = input;
+    if (ml_compress_cb == true) part_compress_cb = Field(part_compress_opt, 0);
 
     caml_enter_blocking_section();
-    BrotliEncoderCompressStream(enc,
-  				BROTLI_OPERATION_FINISH,
-  				&available_in,
-  				&next_in,
-  				&available_out,
-  				&next_out,
-  				0);
+    while (ok) {
+      ok = BrotliEncoderCompressStream(enc,
+				       BROTLI_OPERATION_FINISH,
+				       &available_in,
+				       &next_in,
+				       &available_out,
+				       &next_out,
+				       nullptr);
+      if (!ok) break;
+      size_t buffer_length = 0;
+      const uint8_t *buffer = BrotliEncoderTakeOutput(enc, &buffer_length);
+       if (buffer_length) {
+	 if (ml_compress_cb == true) {
+	   caml_callback(part_compress_cb, caml_copy_nativeint(buffer_length));
+	 }
+	 output.insert(output.end(), buffer, buffer + buffer_length);
+       }
+       if (available_in || BrotliEncoderHasMoreOutput(enc)) continue;
+       break;
+    }
     caml_leave_blocking_section();
 
     bool result_is_good = BrotliEncoderIsFinished(enc);
     BrotliEncoderDestroyInstance(enc);
 
     if (result_is_good) {
-      size_t compressed_size = output_length - available_out;
+      size_t compressed_size = output.size() - available_out;
       compressed_string = caml_alloc_string(compressed_size);
-      memmove(String_val(compressed_string), output, compressed_size);
-      delete[] output;
+      memmove(String_val(compressed_string), output.data(), compressed_size);
       CAMLreturn(compressed_string);
     } else {
-      delete[] output;
       caml_failwith("Compression failure");
     }
   }
