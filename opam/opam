@@ -18,22 +18,19 @@ install: ["ocaml" "setup.ml" "-install"]
 remove: [
   ["ocamlfind" "remove" "brotli"]
 ]
-depexts: [
-  [["osx" "homebrew"] ["brotli"]]
-]
 build-test: [
   ["ocaml" "setup.ml" "-configure" "--enable-tests"]
   ["ocaml" "setup.ml" "-build"]
   ["ocaml" "setup.ml" "-test"]
 ]
-messages:[
-
+post-messages:[
+  "Be sure to have libbrotli installed on your machine" {failure}
 ]
-post-messages:[]
 build-doc: [ "ocaml" "setup.ml" "-doc" ]
 depends: [
   "oasis" {build}
   "ocamlfind" {build}
   "ocamlbuild" {build}
+  "conf-brotli"
 ]
 available: [ ocaml-version >= "4.04.0" ]
