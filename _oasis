@@ -30,7 +30,6 @@ Library brotli
     -std=c++14 -x c++ -I/usr/local/include
   NativeOpt:
     -w +a-4-40..42-44-45-48 -O2
-    -cclib -fsanitize=address -ccopt -fsanitize=address
   ByteOpt: -w +a-4-40..42-44-45-48
   BuildDepends:unix
   Modules: Brotli
