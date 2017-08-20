@@ -50,8 +50,12 @@ settings and I've exposed the ability to add a custom dictionary.
     compressed bytes, files; functions may raise Failure exception *)
 module Decompress : sig
 
-  (** Decompress compressed byte string *)
-  val bytes : ?custom_dictionary:bytes -> bytes -> bytes
+  (** Decompress compressed byte string with optional callback *)
+  val bytes :
+    ?custom_dictionary:bytes ->
+    ?on_part_decompressed:(Nativeint.t -> unit) ->
+    bytes ->
+    bytes
 
   (** Brotli decoder version *)
   val version : string
@@ -59,6 +63,7 @@ module Decompress : sig
   (** Decompress the input file to the output file *)
   val file :
     ?custom_dictionary:bytes ->
+    ?on_part_decompressed:(Nativeint.t -> unit) ->
     in_filename:string -> out_filename:string -> unit ->
     unit
 
@@ -101,15 +106,17 @@ module Compress : sig
     ?lgwin:lgwin ->
     ?lgblock:lgblock ->
     ?custom_dictionary:bytes ->
+    ?on_part_compressed:(Nativeint.t -> unit) ->
     bytes -> bytes
 
-  (** Compress in the input file to the output file name*)
+  (** Compress in the input file to the output file name *)
   val file:
     ?mode:mode ->
     ?quality:quality ->
     ?lgwin:lgwin ->
     ?lgblock:lgblock ->
     ?custom_dictionary:bytes ->
+    ?on_part_compressed:(Nativeint.t -> unit) ->
     in_filename:string ->
     out_filename:string -> unit
     -> unit
@@ -120,7 +127,7 @@ end
 Here's an example usage:
 
 ```ocaml
-let () =
+let test_one () =
   let raw_data =
     {|
 <html>
@@ -136,12 +143,25 @@ let () =
     Brotli.Decompress.version
   |> print_endline;
 
-  let compressed = Brotli.Compress.bytes raw_data in
+  let compressed =
+    Brotli.Compress.bytes
+      ~on_part_compressed:(fun piece ->
+          Printf.sprintf "Compressed piece %d" (Nativeint.to_int piece) |> print_endline
+        )
+      raw_data
+  in
   let compressed_len = Bytes.length compressed in
   Printf.sprintf
     "Compressed length %d" compressed_len |> print_endline;
 
-  let decompressed = Brotli.Decompress.bytes compressed in
+  let decompressed =
+    Brotli.Decompress.bytes
+      ~on_part_decompressed:(fun piece ->
+          Printf.sprintf "Decompress piece %d" (Nativeint.to_int piece)
+          |> print_endline
+        )
+      compressed
+  in
   let decompressed_len = Bytes.length decompressed in
   Printf.sprintf
     "Decompressed length %d, data:%s"
@@ -152,4 +172,53 @@ let () =
   if String.compare raw_data decompressed = 0
   then print_endline "Data was correct in roundtrip"
   else failwith "Data was not equal during roundtrip"
+
+let read_file_content file_path =
+  let ic = open_in file_path in
+  let stats = Unix.stat file_path in
+  let buff = Buffer.create 1024 in
+  Buffer.add_channel buff ic stats.Unix.st_size;
+  close_in ic;
+  Buffer.contents buff
+
+let test_two () =
+  let cwd = Sys.getcwd () in
+  let original_alice =
+    Printf.sprintf "%s/example/alice29.txt" cwd
+  in
+  let compressed_alice =
+    Printf.sprintf "%s/example/alice.test.compressed" cwd
+  in
+  let decompressed_alice =
+    Printf.sprintf "%s/example/alice.test.decompressed" cwd
+  in
+  Brotli.Compress.file
+    ~on_part_compressed:(fun part ->
+        Printf.sprintf "Compressed %d bytes of Alice file" (Nativeint.to_int part)
+        |> print_endline
+      )
+    ~in_filename:original_alice
+    ~out_filename:compressed_alice
+    ();
+  Brotli.Decompress.file
+    ~in_filename:compressed_alice
+    ~out_filename:decompressed_alice
+    ();
+  (* Compare file content of decompressed and original alice *)
+  let decompressed_content = read_file_content decompressed_alice in
+  let original_content = read_file_content original_alice in
+
+  Printf.sprintf
+    "Compare test with baseline %b"
+    (if String.compare decompressed_content original_content = 0
+     then true
+     else false)
+  |> print_endline;
+  Unix.unlink compressed_alice;
+  Unix.unlink decompressed_alice
+
+
+let () =
+  test_one ();
+  test_two ()
 ```
