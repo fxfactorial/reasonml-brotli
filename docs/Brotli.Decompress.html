@@ -3,6 +3,7 @@
 <head>
 <link rel="stylesheet" href="style.css" type="text/css">
 <meta content="text/html; charset=utf-8" http-equiv="Content-Type">
+<meta name="viewport" content="width=device-width, initial-scale=1">
 <link rel="Start" href="index.html">
 <link rel="next" href="Brotli.Compress.html">
 <link rel="Up" href="Brotli.html">
@@ -23,8 +24,8 @@ Provides two functions for decompressing Brotli algorithm
 </div>
 <hr width="100%">
 
-<pre><span id="VALbytes"><span class="keyword">val</span> bytes</span> : <code class="type">?custom_dictionary:bytes -> bytes -> bytes</code></pre><div class="info ">
-Decompress compressed byte string<br>
+<pre><span id="VALbytes"><span class="keyword">val</span> bytes</span> : <code class="type">?custom_dictionary:bytes -><br>       ?on_part_decompressed:(Nativeint.t -> unit) -> bytes -> bytes</code></pre><div class="info ">
+Decompress compressed byte string with optional callback<br>
 </div>
 
 <pre><span id="VALversion"><span class="keyword">val</span> version</span> : <code class="type">string</code></pre><div class="info ">
