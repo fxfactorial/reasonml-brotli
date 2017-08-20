@@ -2,9 +2,8 @@ These are OCaml bindings to the compression algorithm/code released by
 Google called [Brotli](https://github.com/google/brotli).
 
 # Dependencies
-Make sure you have [libbrotli](https://github.com/bagder/libbrotli)
-installed, otherwise this installation will fail. There's a helper
-script in this repo that will do it for you, `bash prepare.sh`.
+Make sure you have the *brotli* library installed. On OS X you can do
+`brew install brotli`, as of 20/08/17, Brotli is on debian (Sid).
 
 # Installation
 
