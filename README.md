@@ -40,7 +40,7 @@ See the documentation [online](http://hyegar.com/ocaml-brotli/)
 # API 
 
 This is directly the commented `mli`, you can control compression
-settings and I've exposed the ability to add a custom dictionary.
+settings.
 
 ```ocaml
 (** OCaml bindings to the Brotli compression library *)
@@ -51,7 +51,6 @@ module Decompress : sig
 
   (** Decompress compressed byte string with optional callback *)
   val bytes :
-    ?custom_dictionary:bytes ->
     ?on_part_decompressed:(Nativeint.t -> unit) ->
     bytes ->
     bytes
@@ -61,7 +60,6 @@ module Decompress : sig
 
   (** Decompress the input file to the output file *)
   val file :
-    ?custom_dictionary:bytes ->
     ?on_part_decompressed:(Nativeint.t -> unit) ->
     in_filename:string -> out_filename:string -> unit ->
     unit
@@ -104,7 +102,6 @@ module Compress : sig
     ?quality:quality ->
     ?lgwin:lgwin ->
     ?lgblock:lgblock ->
-    ?custom_dictionary:bytes ->
     ?on_part_compressed:(Nativeint.t -> unit) ->
     bytes -> bytes
 
@@ -114,7 +111,6 @@ module Compress : sig
     ?quality:quality ->
     ?lgwin:lgwin ->
     ?lgblock:lgblock ->
-    ?custom_dictionary:bytes ->
     ?on_part_compressed:(Nativeint.t -> unit) ->
     in_filename:string ->
     out_filename:string -> unit
