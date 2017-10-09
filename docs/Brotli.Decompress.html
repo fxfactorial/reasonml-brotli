@@ -24,7 +24,7 @@ Provides two functions for decompressing Brotli algorithm
 </div>
 <hr width="100%">
 
-<pre><span id="VALbytes"><span class="keyword">val</span> bytes</span> : <code class="type">?custom_dictionary:bytes -><br>       ?on_part_decompressed:(Nativeint.t -> unit) -> bytes -> bytes</code></pre><div class="info ">
+<pre><span id="VALbytes"><span class="keyword">val</span> bytes</span> : <code class="type">?on_part_decompressed:(Nativeint.t -> unit) -> bytes -> bytes</code></pre><div class="info ">
 Decompress compressed byte string with optional callback<br>
 </div>
 
@@ -32,7 +32,7 @@ Decompress compressed byte string with optional callback<br>
 Brotli decoder version<br>
 </div>
 
-<pre><span id="VALfile"><span class="keyword">val</span> file</span> : <code class="type">?custom_dictionary:bytes -><br>       ?on_part_decompressed:(Nativeint.t -> unit) -><br>       in_filename:string -> out_filename:string -> unit -> unit</code></pre><div class="info ">
+<pre><span id="VALfile"><span class="keyword">val</span> file</span> : <code class="type">?on_part_decompressed:(Nativeint.t -> unit) -><br>       in_filename:string -> out_filename:string -> unit -> unit</code></pre><div class="info ">
 Decompress the input file to the output file<br>
 </div>
 </body></html>

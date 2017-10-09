@@ -10,12 +10,9 @@
 </head>
 <body>
 <code class="code"><span class="keyword">sig</span><br>
-&nbsp;&nbsp;<span class="keyword">val</span>&nbsp;bytes&nbsp;:<br>
-&nbsp;&nbsp;&nbsp;&nbsp;?custom_dictionary:bytes&nbsp;<span class="keywordsign">-&gt;</span><br>
-&nbsp;&nbsp;&nbsp;&nbsp;?on_part_decompressed:(<span class="constructor">Nativeint</span>.t&nbsp;<span class="keywordsign">-&gt;</span>&nbsp;unit)&nbsp;<span class="keywordsign">-&gt;</span>&nbsp;bytes&nbsp;<span class="keywordsign">-&gt;</span>&nbsp;bytes<br>
+&nbsp;&nbsp;<span class="keyword">val</span>&nbsp;bytes&nbsp;:&nbsp;?on_part_decompressed:(<span class="constructor">Nativeint</span>.t&nbsp;<span class="keywordsign">-&gt;</span>&nbsp;unit)&nbsp;<span class="keywordsign">-&gt;</span>&nbsp;bytes&nbsp;<span class="keywordsign">-&gt;</span>&nbsp;bytes<br>
 &nbsp;&nbsp;<span class="keyword">val</span>&nbsp;version&nbsp;:&nbsp;string<br>
 &nbsp;&nbsp;<span class="keyword">val</span>&nbsp;file&nbsp;:<br>
-&nbsp;&nbsp;&nbsp;&nbsp;?custom_dictionary:bytes&nbsp;<span class="keywordsign">-&gt;</span><br>
 &nbsp;&nbsp;&nbsp;&nbsp;?on_part_decompressed:(<span class="constructor">Nativeint</span>.t&nbsp;<span class="keywordsign">-&gt;</span>&nbsp;unit)&nbsp;<span class="keywordsign">-&gt;</span><br>
 &nbsp;&nbsp;&nbsp;&nbsp;in_filename:string&nbsp;<span class="keywordsign">-&gt;</span>&nbsp;out_filename:string&nbsp;<span class="keywordsign">-&gt;</span>&nbsp;unit&nbsp;<span class="keywordsign">-&gt;</span>&nbsp;unit<br>
 <span class="keyword">end</span></code></body></html>

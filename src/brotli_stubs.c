@@ -56,9 +56,9 @@ CAMLprim value ml_brotli_encoder_version(__attribute__((unused)) value) {
   CAMLreturn(v);
 }
 
-CAMLprim value ml_brotli_compress(value part_compress_opt, value dict_opt,
-                                  value params, value compress_me) {
-  CAMLparam4(part_compress_opt, dict_opt, params, compress_me);
+CAMLprim value ml_brotli_compress(value part_compress_opt, value params,
+                                  value compress_me) {
+  CAMLparam3(part_compress_opt, params, compress_me);
   CAMLlocal2(compressed_string, part_compress_cb);
 
   bool ml_compress_cb = (part_compress_opt == Val_none) == false;
@@ -81,13 +81,6 @@ CAMLprim value ml_brotli_compress(value part_compress_opt, value dict_opt,
   BrotliEncoderSetParameter(enc, BROTLI_PARAM_LGWIN, Int_val(Field(params, 2)));
   BrotliEncoderSetParameter(enc, BROTLI_PARAM_LGBLOCK,
                             Int_val(Field(params, 3)));
-
-  if ((dict_opt == Val_none) == false) {
-    uint8_t *custom_dictionary = (uint8_t *)String_val(Field(dict_opt, 0));
-    size_t custom_dictionary_length = caml_string_length(Field(dict_opt, 0));
-    BrotliEncoderSetCustomDictionary(enc, custom_dictionary_length,
-                                     custom_dictionary);
-  }
 
   if (ml_compress_cb == true)
     part_compress_cb = Field(part_compress_opt, 0);
@@ -126,15 +119,13 @@ CAMLprim value ml_brotli_compress(value part_compress_opt, value dict_opt,
   }
 }
 
-CAMLprim value ml_brotli_decompress(value dict_opt, value part_decompress_opt,
+CAMLprim value ml_brotli_decompress(value part_decompress_opt,
                                     value decompress_me) {
-  CAMLparam3(dict_opt, part_decompress_opt, decompress_me);
+  CAMLparam2(part_decompress_opt, decompress_me);
   CAMLlocal2(decompressed_string, part_completed_cb);
 
   const uint8_t *input = (uint8_t *)String_val(decompress_me);
-  const uint8_t *custom_dictionary = nullptr;
   size_t available_in = caml_string_length(decompress_me);
-  size_t custom_dictionary_length = 0;
 
   std::vector<uint8_t> output;
   const uint8_t *next_in = input;
@@ -144,13 +135,6 @@ CAMLprim value ml_brotli_decompress(value dict_opt, value part_decompress_opt,
   BrotliDecoderState *dec =
       BrotliDecoderCreateInstance(nullptr, nullptr, nullptr);
   BrotliDecoderResult result = BROTLI_DECODER_RESULT_NEEDS_MORE_OUTPUT;
-
-  if ((dict_opt == Val_none) == false) {
-    custom_dictionary = (uint8_t *)String_val(Field(dict_opt, 0));
-    custom_dictionary_length = caml_string_length(Field(dict_opt, 0));
-    BrotliDecoderSetCustomDictionary(dec, custom_dictionary_length,
-                                     custom_dictionary);
-  }
 
   if ((part_decompress_opt == Val_none) == false) {
     part_completed_cb = Field(part_decompress_opt, 0);
