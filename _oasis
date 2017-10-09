@@ -27,7 +27,7 @@ Library brotli
     -Wextra -fno-omit-frame-pointer
     -fsanitize-undefined-trap-on-error
     -O2 -fno-optimize-sibling-calls
-    -std=c++14 -x c++ -I/usr/local/include
+    -std=c++11 -x c++ -I/usr/local/include
   NativeOpt:
     -w +a-4-40..42-44-45-48 -O2
   ByteOpt: -w +a-4-40..42-44-45-48
