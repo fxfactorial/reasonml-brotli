@@ -2,7 +2,7 @@
 OASISFormat:  0.4
 OCamlVersion: >= 4.04.0
 Name:         brotli
-Version:      2.0.0
+Version:      2.0.1
 Maintainers:  Edgar Aroutiounian
 Homepage:     http://hyegar.com
 Synopsis:     Bindings to Google's Brotli compresion algorithm
@@ -25,7 +25,6 @@ Library brotli
     -L/usr/local/lib -lbrotlidec -lbrotlienc -lstdc++
   CCOpt:
     -Wextra -fno-omit-frame-pointer
-    -fsanitize-undefined-trap-on-error
     -O2 -fno-optimize-sibling-calls
     -std=c++11 -x c++ -I/usr/local/include
   NativeOpt:
