@@ -1,7 +1,10 @@
 (** OCaml bindings to the Brotli compression library *)
 
 (** Provides two functions for decompressing Brotli algorithm
-    compressed bytes, files; functions may raise Failure exception *)
+    compressed bytes, files; functions may raise Failure
+    exception. Note that on_part_decompressed and on_part_compressed
+    require OCaml to acquire and release the runtime lock
+    repeatedly.  *)
 module Decompress : sig
 
   (** Decompress compressed byte string with optional callback *)

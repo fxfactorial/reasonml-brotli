@@ -6,7 +6,7 @@
 #include <caml/fail.h>
 #include <caml/memory.h>
 #include <caml/mlvalues.h>
-#include <caml/signals.h>
+#include <caml/threads.h>
 
 #include <brotli/decode.h>
 #include <brotli/encode.h>
@@ -85,7 +85,7 @@ CAMLprim value ml_brotli_compress(value part_compress_opt, value params,
   if (ml_compress_cb == true)
     part_compress_cb = Field(part_compress_opt, 0);
 
-  caml_enter_blocking_section();
+  caml_release_runtime_system();
   while (ok) {
     ok = BrotliEncoderCompressStream(enc, BROTLI_OPERATION_FINISH,
                                      &available_in, &next_in, &available_out,
@@ -96,7 +96,9 @@ CAMLprim value ml_brotli_compress(value part_compress_opt, value params,
     const uint8_t *buffer = BrotliEncoderTakeOutput(enc, &buffer_length);
     if (buffer_length) {
       if (ml_compress_cb == true) {
+        caml_acquire_runtime_system();
         caml_callback(part_compress_cb, caml_copy_nativeint(buffer_length));
+        caml_release_runtime_system();
       }
       output.insert(output.end(), buffer, buffer + buffer_length);
     }
@@ -104,7 +106,7 @@ CAMLprim value ml_brotli_compress(value part_compress_opt, value params,
       continue;
     break;
   }
-  caml_leave_blocking_section();
+  caml_acquire_runtime_system();
 
   bool result_is_good = BrotliEncoderIsFinished(enc);
   BrotliEncoderDestroyInstance(enc);
@@ -140,7 +142,7 @@ CAMLprim value ml_brotli_decompress(value part_decompress_opt,
     part_completed_cb = Field(part_decompress_opt, 0);
   }
 
-  caml_enter_blocking_section();
+  caml_release_runtime_system();
   while (result == BROTLI_DECODER_NEEDS_MORE_OUTPUT) {
     result = BrotliDecoderDecompressStream(dec, &available_in, &next_in,
                                            &available_out, &next_out, nullptr);
@@ -148,12 +150,14 @@ CAMLprim value ml_brotli_decompress(value part_decompress_opt,
     const uint8_t *buffer = BrotliDecoderTakeOutput(dec, &buffer_length);
     if (buffer_length != 0) {
       if ((part_decompress_opt == Val_none) == false) {
+        caml_acquire_runtime_system();
         caml_callback(part_completed_cb, caml_copy_nativeint(buffer_length));
+        caml_release_runtime_system();
       }
       output.insert(output.end(), buffer, buffer + buffer_length);
     }
   }
-  caml_leave_blocking_section();
+  caml_acquire_runtime_system();
 
   if ((result == BROTLI_DECODER_SUCCESS) == true) {
     decompressed_string = caml_alloc_string(output.size());

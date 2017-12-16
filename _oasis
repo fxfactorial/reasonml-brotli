@@ -2,7 +2,7 @@
 OASISFormat:  0.4
 OCamlVersion: >= 4.04.0
 Name:         brotli
-Version:      2.0.1
+Version:      2.0.2
 Maintainers:  Edgar Aroutiounian
 Homepage:     http://hyegar.com
 Synopsis:     Bindings to Google's Brotli compresion algorithm
