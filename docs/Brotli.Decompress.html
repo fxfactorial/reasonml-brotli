@@ -20,7 +20,10 @@
 
 <pre><span class="keyword">module</span> Decompress: <code class="code"><span class="keyword">sig</span></code> <a href="Brotli.Decompress.html">..</a> <code class="code"><span class="keyword">end</span></code></pre><div class="info module top">
 Provides two functions for decompressing Brotli algorithm
-    compressed bytes, files; functions may raise Failure exception<br>
+    compressed bytes, files; functions may raise Failure
+    exception. Note that on_part_decompressed and on_part_compressed
+    require OCaml to acquire and release the runtime lock
+    repeatedly.<br>
 </div>
 <hr width="100%">
 
