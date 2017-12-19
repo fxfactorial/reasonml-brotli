@@ -5,7 +5,7 @@ version: "2.0.3"
 maintainer: "Edgar Aroutiounian <edgar.factorial@gmail.com>"
 authors: [ "Edgar Aroutiounian <edgar.factorial@gmail.com>" ]
 license: "BSD-3-clause"
-homepage: "http://hyegar.com"
+homepage: "http://hyegar.com/reasonml-brotli"
 bug-reports: "https://github.com/fxfactorial/reasonml-brotli/issues"
 dev-repo: "https://github.com/fxfactorial/reasonml-brotli.git"
 tags: [ "clib:stdc" "clib:brotli"  ]
