@@ -1,5 +1,4 @@
-# -*- conf -*-
-opam-version: "1.2"
+opam-version: "2.0"
 name: "brotli"
 version: "2.0.3"
 maintainer: "Edgar Aroutiounian <edgar.factorial@gmail.com>"
@@ -7,18 +6,20 @@ authors: [ "Edgar Aroutiounian <edgar.factorial@gmail.com>" ]
 license: "BSD-3-clause"
 homepage: "http://hyegar.com/reasonml-brotli"
 bug-reports: "https://github.com/fxfactorial/reasonml-brotli/issues"
-dev-repo: "https://github.com/fxfactorial/reasonml-brotli.git"
+dev-repo: "git://github.com/fxfactorial/reasonml-brotli.git"
 tags: [ "clib:stdc" "clib:brotli"  ]
-build: ["make" "build"]
-install: ["make" "install"]
-remove: ["make" "remove"]
-# build-test: [["jbuilder" "runtest" "-p" name "-j" jobs]]
+build: [
+  ["dune" "subst"] {pinned}
+  ["dune" "build" "-p" name "-j" jobs
+    "@install"
+    "@runtest" {with-test}
+    "@doc" {with-doc}]
+]
 post-messages:["Be sure to have libbrotli installed on your machine" {failure}]
-build-doc: [ "make" "docs" ]
 depends: [
-  "jbuilder" {build}
+  "ocaml" {>= "4.04.0"}
+  "dune" {>= "1.0"}
   "odoc" {build}
-  "opam-installer" {build}
   "conf-brotli"
 ]
-available: [ ocaml-version >= "4.04.0" ]
+synopsis: "ReasonML bindings to the compression algorithm/code Brotli"

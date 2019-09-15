@@ -16,7 +16,7 @@ let test_one = () => {
     Brotli.Compress.bytes(
       ~on_part_compressed=
         (piece) => Printf.sprintf("Compressed piece %d", Nativeint.to_int(piece)) |> print_endline,
-      raw_data
+      Bytes.of_string(raw_data)
     );
   let compressed_len = Bytes.length(compressed);
   Printf.sprintf("Compressed length %d", compressed_len) |> print_endline;
@@ -27,9 +27,9 @@ let test_one = () => {
       compressed
     );
   let decompressed_len = Bytes.length(decompressed);
-  Printf.sprintf("Decompressed length %d, data:%s", decompressed_len, decompressed)
+  Printf.sprintf("Decompressed length %d, data:%s", decompressed_len, Bytes.to_string(decompressed))
   |> print_endline;
-  if (String.compare(raw_data, decompressed) == 0) {
+  if (String.compare(raw_data, Bytes.to_string(decompressed)) == 0) {
     print_endline("Data was correct in roundtrip");
   } else {
     failwith("Data was not equal during roundtrip");

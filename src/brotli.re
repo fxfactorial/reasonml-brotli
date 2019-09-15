@@ -14,7 +14,7 @@ module Decompress = {
         (ic_data) => {
           Buffer.add_channel(b, ic_data, stats.Unix.st_size);
           close_in(ic_data);
-          let decompressed = bytes(~on_part_decompressed?, Buffer.contents(b));
+          let decompressed = bytes(~on_part_decompressed?, Bytes.of_string(Buffer.contents(b)));
           Buffer.reset(b);
           Buffer.add_bytes(b, decompressed);
           open_out(out_filename)
@@ -155,7 +155,7 @@ module Compress = {
             compress_bytes(
               ~on_part_compressed?,
               make_params(mode, quality, lgwin, lgblock),
-              Buffer.contents(b)
+              Bytes.of_string(Buffer.contents(b))
             );
           Buffer.reset(b);
           Buffer.add_bytes(b, compressed);
