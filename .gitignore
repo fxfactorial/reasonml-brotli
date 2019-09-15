@@ -1,2 +1,3 @@
 _build
-brotli.install
+*.merlin
+*.install

@@ -24,7 +24,7 @@ $ opam pin add brotli . -y
 Compile with:
 
 ```shell
-$ make build
+$ dune build
 ```
 
 Or play with it directly in `utop`:
@@ -32,8 +32,8 @@ Or play with it directly in `utop`:
 ![](./compressed_image.png)
 
 The API is very simple and limited to compressing, decompressing byte
-strings and files; type `make docs` in the source repo and you get
-pretty HTML docs in the `docs` repo, just open `index.html`.
+strings and files; type `dune build @doc` in the source repo and you get
+pretty HTML docs in the `_build` repo, just open `index.html`.
 
 See the documentation [online](http://hyegar.com/reasonml-brotli/)
 

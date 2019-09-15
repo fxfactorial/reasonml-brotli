@@ -1,0 +1,9 @@
+(executable
+ (name brotli_example)
+ (libraries brotli unix))
+
+(alias
+ (name runtest)
+ (package brotli)
+ (action
+  (run %{exe:brotli_example.exe})))
