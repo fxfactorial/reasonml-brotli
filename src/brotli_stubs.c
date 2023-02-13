@@ -114,7 +114,7 @@ CAMLprim value ml_brotli_compress(value part_compress_opt, value params,
   if (result_is_good) {
     size_t compressed_size = output.size() - available_out;
     compressed_string = caml_alloc_string(compressed_size);
-    memmove(String_val(compressed_string), output.data(), compressed_size);
+    memmove(Bytes_val(compressed_string), output.data(), compressed_size);
     CAMLreturn(compressed_string);
   } else {
     caml_failwith("Compression failure");
@@ -161,7 +161,7 @@ CAMLprim value ml_brotli_decompress(value part_decompress_opt,
 
   if ((result == BROTLI_DECODER_SUCCESS) == true) {
     decompressed_string = caml_alloc_string(output.size());
-    memmove(String_val(decompressed_string), &output[0], output.size());
+    memmove(Bytes_val(decompressed_string), &output[0], output.size());
     BrotliDecoderDestroyInstance(dec);
     CAMLreturn(decompressed_string);
   } else {
