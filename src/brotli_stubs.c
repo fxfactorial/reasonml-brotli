@@ -143,7 +143,7 @@ CAMLprim value ml_brotli_decompress(value part_decompress_opt,
   }
 
   caml_release_runtime_system();
-  while (result == BROTLI_DECODER_NEEDS_MORE_OUTPUT) {
+  while (result == BROTLI_DECODER_RESULT_NEEDS_MORE_OUTPUT) {
     result = BrotliDecoderDecompressStream(dec, &available_in, &next_in,
                                            &available_out, &next_out, nullptr);
     size_t buffer_length = 0;
@@ -159,7 +159,7 @@ CAMLprim value ml_brotli_decompress(value part_decompress_opt,
   }
   caml_acquire_runtime_system();
 
-  if ((result == BROTLI_DECODER_SUCCESS) == true) {
+  if ((result == BROTLI_DECODER_RESULT_SUCCESS) == true) {
     decompressed_string = caml_alloc_string(output.size());
     memmove(String_val(decompressed_string), &output[0], output.size());
     BrotliDecoderDestroyInstance(dec);
